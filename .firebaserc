@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "staging": "hmc-transcribers",
+    "default": "hmc-transcribers"
+  }
+}
