@@ -1,6 +1,5 @@
 <template>
 	<div class="Page1">
-		<p>Hello again</p>
 		<img alt="Vue logo" src="../../assets/logo.png">
 		<h1>Upload your business card now</h1>
 		<Browse class="browse"/>
