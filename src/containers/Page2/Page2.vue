@@ -1,6 +1,6 @@
 <template>
 	<div class="Page2">
-		<h1>Hello I'm here!</h1>
+		<h1>This is where the output of the model will be displayed!</h1>
 	</div>
 </template>
 
