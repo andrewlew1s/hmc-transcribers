@@ -26,7 +26,7 @@ export default {
 @import '../settings';
 
 .Header{
-	$height: 100px;
+	$height: 40px;
 	background: $Highlight;
 	height: $height;
 	position: relative;

@@ -54,7 +54,7 @@ export default {
 
 .Menue{
 		text-align: center;
-		border-top: 1px solid $Grey;
+		// border-top: 1px solid $Grey;
 		border-bottom: 1px solid $Grey;
 
 		&__link{
