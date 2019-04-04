@@ -2,11 +2,11 @@ import Page2 from './Page2';
 
 const routes = [
 	{
-		name: 'Display',
+		// name: 'Display',
 		path: '/display',
 		component: Page2,
 		menu: true,
-		menuName: 'Display'
+		// menuName: 'Display'
 	}
 ];
 

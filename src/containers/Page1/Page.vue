@@ -1,8 +1,13 @@
 <template>
 	<div class="Page1">
 		<img alt="Vue logo" src="../../assets/logo.png">
-		<h1>Upload your business card now</h1>
+		<div  class="Page1__header">
+			<h1>Upload your business card now</h1>
+		</div>
 		<Browse class="browse"/>
+		<div  class="Page1__displayButton">
+			<router-link to="/display" tag="button">To fields!</router-link>
+		</div>
 	</div>
 </template>
 
@@ -21,6 +26,16 @@ export default {
 </script>
 
 <style lang="scss">
+
+.Page1 {
+	
+	&__displayButton {
+		padding: 2rem;
+	}
+	&__header {
+		padding: 2rem;
+	}
+}
 
 
 </style>
