@@ -1,12 +1,21 @@
 <template>
-  <div>
-    <b-form-file
-      v-model="file"
-      :state="Boolean(file)"
-      placeholder="Choose a file..."
-      drop-placeholder="Drop file here..."
-      accept=".jpg, .png, .pdf"
-    />
+  <div class="Browse">
+    <div  class="Browse__header">
+			<h1>Upload a business card</h1>
+		</div>
+    <div  class="Browse__form">
+      <b-form-file 
+        v-model="file"
+        accept=".jpg, .png, .pdf" 
+        drop-placeholder="Drop the file!" 
+        class="mt-3" 
+        plain
+        >
+      </b-form-file>
+    </div>
+    <div class="Browse__button">
+			<v-btn color="grey" to="/display">Transcribe</v-btn>
+		</div>
   </div>
 </template>
 
@@ -14,10 +23,28 @@
   export default {
     data() {
       return {
-        file: null,
-        file2: null
+        file: null
       }
     }
   }
 </script>
+
+<style lang="scss">
+
+.Browse {
+
+  &__header {
+		padding: 1rem;
+  }
+  
+  &__button {
+		padding: 2rem;
+  }
+  
+   &__form {
+		margin-left: 4rem;
+	}
+}
+</style>
+
 
