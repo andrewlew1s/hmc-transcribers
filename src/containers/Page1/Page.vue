@@ -7,7 +7,11 @@
 					<img alt="Vue logo" src="../../assets/logo.png">
 				</div>
 				<section id="Page1__content" class="Page1__intro">
-					<Browse class="Page1__browse"/>
+					<div  class="Page1__header">
+						<h1>Upload a business card</h1>
+					</div>
+					<input type="file" name='file' @change="onFileSelected">
+					<button @click="onUpload" to="/display">Upload</button>
 				</section>
 			</v-container>
 		</div>
@@ -15,15 +19,46 @@
 </template>
 
 <script>
-import Browse from '../../components/Browse.vue'
+import axios from 'axios';
+import * as firebase from 'firebase'
 import LandingImage from './components/LandingImage';
 
 export default {
 
   name: 'app',
+  data () {
+	return {
+		selectedFile: null,
+		imageUrl: '',
+	}
+  },
   components: {
-	Browse,
 	LandingImage   
+  },
+  methods: {
+	onFileSelected(event) {
+		this.selectedFile = event.target.files[0]
+		console.log(this.selectedFile)
+		const fileReader = new FileReader()
+		fileReader.addEventListener('load', () => {
+			this.imageUrl = fileReader.result
+			console.log(this.imageUrl)
+		})
+	},
+	onUpload() {
+		var filename = this.selectedFile.name
+		console.log(filename)
+		var storageRef = firebase.storage().ref('cards/' + filename)
+		console.log(storageRef)
+		var uploadTask = storageRef.put(this.selectedFile)
+
+		var downloadURL = uploadTask.snapshot.downloadURL
+		console.log(downloadURL)
+		axios.get('http://127.0.0.1:5000/fields')
+			.then(res => {
+				console.log(res)
+			})
+	}
   }
 }
 </script>

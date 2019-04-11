@@ -5,14 +5,24 @@ import router from './router';
 import Vuetify from 'vuetify'
 import VueScrollTo from 'vue-scrollto';
 import 'vuetify/dist/vuetify.min.css'
+import * as firebase from 'firebase'
 
 Vue.use(Vuetify)
 Vue.use(VueScrollTo, { offset: -61, duration: 800, });
 Vue.use(BootstrapVue)
-
 Vue.config.productionTip = false
 
 new Vue({
+  router,
   render: h => h(App),
-  router
+  created () {
+    firebase.initializeApp({
+      apiKey: "AIzaSyCrQrzpGmwxtICzplBfV4kFw02CYPYHxdc",
+      authDomain: "hmc-transcribers.firebaseapp.com",
+      databaseURL: "https://hmc-transcribers.firebaseio.com",
+      projectId: "hmc-transcribers",
+      storageBucket: "gs://hmc-transcribers.appspot.com",
+      messagingSenderId: "859954806298"
+    }) 
+  }
 }).$mount('#app')
