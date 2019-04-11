@@ -1,23 +1,44 @@
 /* Colours */
+/* Colours */
+$Brown-Dark: #534D56;
+$Brown-Light: #656176;
+$Pink: #DECDF5;
+$Cream: #F8F1FF;
+$Green: #1B998B;
 $Grey: #d7d7d9;
 
-$Background: #33ccff;
+$Background: #ffffff;
 $Theme: #ff99cc;
 $Text_Colour: #333300;
 $Alert: #DB2929;
 $Highlight: rgb(255, 255, 255);
 
+/* Colour Config */
+$Background-Colour: $Background;
+$Theme-Colour: $Brown-Light;
+$Highlight-Colour: $Text_Colour;
+$Shadow-Colour: $Brown-Dark;
+$Text-Colour: $Brown-Dark;
 
 /* Layout */
-$Frame_Width: 1140px;
-
+$Header-Height: 90px;
+$Footer-Height: 130px;
+$Frame-Width: 1140px;
+$Mobile-Width: 767px;
 
 /* Font */
-$Base_Font_Family: 'Zilla Slab', serif;
+$Base_Font_Family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 
-$Title_Font_Family:'Zilla Slab', serif;
-$Alt_Font_Family: 'Zilla Slab', serif;
+$Title_Font_Family:"Palatino Linotype", "Book Antiqua", Palatino, serif;
+$Alt_Font_Family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 $Base_Font_Colour: $Text_Colour;
+
+/* Fonts */
+$Poppin: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+
+/* Font Config */
+$Font-Family: $Poppin;
+
 
 /* Devices */
 $Mobile_Width: 767px;
