@@ -6,13 +6,11 @@
 				<div class="Page1__content__logo">
 					<img alt="Vue logo" src="../../assets/logo.png">
 				</div>
-				<section id="Page1__content" class="Page1__intro">
-					<div  class="Page1__header">
-						<h1>Upload a business card</h1>
-					</div>
-					<input type="file" name='file' @change="onFileSelected">
-					<button @click="onUpload" to="/display">Upload</button>
-				</section>
+				<div class="Page1__content__header">
+					<h1>Upload a business card</h1>
+				</div>
+				<input type="file" name='file' @change="onFileSelected">
+				<button @click="onUpload" to="/display">Upload</button>
 			</v-container>
 		</div>
 	</section>
@@ -78,16 +76,21 @@ export default {
 		width: 80%;
 		margin: -4rem 10% 2rem 10%;
 		text-align: center;
-		padding: 2rem 3rem;
+		// padding: 3rem;
 	}
 
 	&__content {
+		// padding: 1rem;
 		margin-top: 2rem;
 		position: relative;
 		z-index: 1;
 
 		&__logo {
-			padding: 7rem;
+			padding: 6rem;
+		}
+
+		&__header {
+			margin-bottom: 2rem;
 		}
 
 	}
