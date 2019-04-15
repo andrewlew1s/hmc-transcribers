@@ -27,11 +27,11 @@
 				class="elevation-1">
 				<template v-slot:items="props">
 					<!-- <td>{{ props.item.name }}</td> -->
-					<td class="text-xs-right">{{ props.item.address }}</td>
-					<td class="text-xs-right">{{ props.item.postCode }}</td>
-					<td class="text-xs-right">{{ props.item.company }}</td>
-					<td class="text-xs-right">{{ props.item.telNumber }}</td>
-					<td class="text-xs-right">{{ props.item.email }}</td>
+					<td>{{ props.item.type }}</td>
+					<td>{{ props.item.confidence }}</td>
+					<td>{{ props.item.end_pos }}</td>
+					<td>{{ props.item.start_pos }}</td>
+					<td>{{ props.item.text }}</td>
 				</template>
 			</v-data-table>
 			<div class="Page2__header">
@@ -50,25 +50,25 @@ export default {
 	data () {
       return {
         headers: [
-          {
-            text: 'Full Name',
-            align: 'left',
-            sortable: false,
-            value: 'name'
-          },
-          { text: 'Address', value: 'address' },
-          { text: 'Post Code', value: 'postCode' },
-          { text: 'Company', value: 'company' },
-          { text: 'Telephone Number', value: 'telNumber' },
-          { text: 'Email', value: 'email' }
+			{
+			text: 'Type',
+			align: 'left',
+			// sortable: false,
+			value: 'type'
+			},
+			{ text: 'Confidence', value: 'confidence' },
+			{ text: 'Start Position', value: 'start_pos' },
+			{ text: 'End Position', value: 'end_pos' },     
+			{ text: 'Text', value: 'text' }
+        //   { text: 'Type', value: 'type' }
         ],
         fields: [
 			{
-				address: this.$store.state.data,
-				postCode: 'hi',
-				company: 'hi',
-				telNumber: 'hi',
-				email: 'hi'
+				type: 'he',
+				confidence: this.$store.state.data,
+				end_pos: 'hi',
+				start_pos: 'hi',
+				text: 'hi',
 			}
 		]
       }
