@@ -25,10 +25,13 @@
 				:headers="headers"
 				:items="fields"
 				class="elevation-1">
-				<template v-slot:no-data>
-					<v-alert :value="true" color="error" icon="warning">
-						Sorry, nothing to display here :(
-					</v-alert>
+				<template v-slot:items="props">
+					<!-- <td>{{ props.item.name }}</td> -->
+					<td class="text-xs-right">{{ props.item.address }}</td>
+					<td class="text-xs-right">{{ props.item.postCode }}</td>
+					<td class="text-xs-right">{{ props.item.company }}</td>
+					<td class="text-xs-right">{{ props.item.telNumber }}</td>
+					<td class="text-xs-right">{{ props.item.email }}</td>
 				</template>
 			</v-data-table>
 			<div class="Page2__header">
@@ -54,12 +57,20 @@ export default {
             value: 'name'
           },
           { text: 'Address', value: 'address' },
-          { text: 'Post Code', value: 'post-code' },
+          { text: 'Post Code', value: 'postCode' },
           { text: 'Company', value: 'company' },
-          { text: 'Telephone Number', value: 'telephone-number' },
+          { text: 'Telephone Number', value: 'telNumber' },
           { text: 'Email', value: 'email' }
         ],
-        fields: []
+        fields: [
+			{
+				address: this.$store.state.data,
+				postCode: 'hi',
+				company: 'hi',
+				telNumber: 'hi',
+				email: 'hi'
+			}
+		]
       }
 		},
 	components: {
@@ -83,10 +94,7 @@ export default {
 		}
 	}
 }
-
-
 </script>
-
 
 <style lang="scss">
 @import '../../settings';
