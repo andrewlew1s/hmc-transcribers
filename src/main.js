@@ -6,7 +6,11 @@ import Vuetify from 'vuetify'
 import VueScrollTo from 'vue-scrollto';
 import 'vuetify/dist/vuetify.min.css'
 import * as firebase from 'firebase'
+import Vuex from 'vuex'
+import { store } from './store';
 
+
+Vue.use(Vuex)
 Vue.use(Vuetify)
 Vue.use(VueScrollTo, { offset: -61, duration: 800, });
 Vue.use(BootstrapVue)
@@ -14,6 +18,7 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store,
   render: h => h(App),
   created () {
     firebase.initializeApp({

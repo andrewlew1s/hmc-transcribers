@@ -12,14 +12,14 @@
 							</v-img>
 							<v-card-actions>
 								<v-btn flat color="black">Share</v-btn>
-								<v-btn flat color="black">Explore</v-btn>
+								<v-btn @click="updateData" flat color="black">Explore</v-btn>
 							</v-card-actions>
 						</v-card>
 					</v-flex>
 				</v-layout>
 			</div>
 			<div class="Page2__header">
-				<h1>This is where the output will be displayed!</h1>
+				<h1>{{data}}</h1>
 			</div>
 			<v-data-table
 				:headers="headers"
@@ -39,8 +39,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 import Browse from '../../components/Browse.vue'
-
+import { mapState } from 'vuex'
 
 export default {
 	data () {
@@ -63,8 +64,26 @@ export default {
 		},
 	components: {
 		Browse
+	},
+
+	computed: {
+		...mapState([
+			'data'
+		])
+	},
+
+	methods: {		
+		updateData() {
+			axios.get('http://127.0.0.1:5000/first')
+			.then(res => {
+				console.log(res.data)
+				var resString = JSON.stringify(res.data)
+				this.$store.commit('updateData',resString)
+			})
+		}
 	}
 }
+
 
 </script>
 

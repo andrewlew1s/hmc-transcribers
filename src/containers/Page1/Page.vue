@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import * as firebase from 'firebase'
 import LandingImage from './components/LandingImage';
 
@@ -49,13 +48,8 @@ export default {
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
 		var uploadTask = storageRef.put(this.selectedFile)
-
-		var downloadURL = uploadTask.snapshot.downloadURL
-		console.log(downloadURL)
-		axios.get('http://127.0.0.1:5000/fields')
-			.then(res => {
-				console.log(res)
-			})
+		// var downloadURL = uploadTask.snapshot.downloadURL
+		// console.log(downloadURL)
 	}
   }
 }
