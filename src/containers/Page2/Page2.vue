@@ -1,25 +1,7 @@
 <template>
 	<div class="Page2">
-		<div class="Page2__card">
-				<v-layout>
-					<v-flex xs12 sm6 offset-sm3>
-						<v-card>
-							<v-img
-								height="200px"
-								src="https://images.pexels.com/photos/326569/pexels-photo-326569.jpeg?cs=srgb&dl=adult-blank-business-326569.jpg&fm=jpg">
-								<v-container fill-height fluid>
-								</v-container>
-							</v-img>
-							<v-card-actions>
-								<v-btn flat color="black">Share</v-btn>
-								<v-btn @click="updateData" flat color="black">Explore</v-btn>
-							</v-card-actions>
-						</v-card>
-					</v-flex>
-				</v-layout>
-			</div>
 			<div class="Page2__header">
-				<h1>{{data}}</h1>
+				<h1>{{data.type}}</h1>
 			</div>
 			<v-data-table
 				:headers="headers"
@@ -42,7 +24,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import Browse from '../../components/Browse.vue'
 import { mapState } from 'vuex'
 
@@ -64,11 +45,11 @@ export default {
         ],
         fields: [
 			{
-				type: 'he',
-				confidence: this.$store.state.data,
-				end_pos: 'hi',
-				start_pos: 'hi',
-				text: 'hi',
+				type: this.$store.state.data.type,
+				confidence: this.$store.state.confidence,
+				end_pos: this.$store.state.data.end_pos,
+				start_pos: this.$store.state.data.start_pos,
+				text: this.$store.state.data.text
 			}
 		]
       }
@@ -81,17 +62,6 @@ export default {
 		...mapState([
 			'data'
 		])
-	},
-
-	methods: {		
-		updateData() {
-			axios.get('http://127.0.0.1:5000/first')
-			.then(res => {
-				console.log(res.data)
-				var resString = JSON.stringify(res.data)
-				this.$store.commit('updateData',resString)
-			})
-		}
 	}
 }
 </script>

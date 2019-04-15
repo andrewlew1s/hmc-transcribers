@@ -10,13 +10,32 @@
 					<h1>Upload a business card</h1>
 				</div>
 				<input type="file" name='file' @change="onFileSelected">
-				<button @click="onUpload" to="/display">Upload</button>
 			</v-container>
+				<div class="Page2__card">
+				<v-layout>
+					<v-flex xs12 sm6 offset-sm3>
+						<v-card>
+							<v-img
+								height="200px"
+								src="https://images.pexels.com/photos/326569/pexels-photo-326569.jpeg?cs=srgb&dl=adult-blank-business-326569.jpg&fm=jpg">
+								<v-container fill-height fluid>
+								</v-container>
+							</v-img>
+							<v-card-actions>
+								<p>Is this your card?</p>
+								<v-btn @click="updateData" flat color="black">Yes</v-btn>
+							</v-card-actions>
+						</v-card>
+						<v-btn @click="onUpload" to="/display">See results</v-btn>
+					</v-flex>
+				</v-layout>
+			</div>
 		</div>
 	</section>
 </template>
 
 <script>
+import axios from 'axios'
 import * as firebase from 'firebase'
 import LandingImage from './components/LandingImage';
 
@@ -48,8 +67,17 @@ export default {
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
 		var uploadTask = storageRef.put(this.selectedFile)
+		
 		// var downloadURL = uploadTask.snapshot.downloadURL
 		// console.log(downloadURL)
+	},
+	updateData() {
+		axios.get('http://127.0.0.1:5000/first')
+		.then(res => {
+			console.log(res.data)
+			var resString = JSON.stringify(res.data)
+			this.$store.commit('updateData',resString)
+		})
 	}
   }
 }
