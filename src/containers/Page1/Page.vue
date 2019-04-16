@@ -72,11 +72,28 @@ export default {
 		// console.log(downloadURL)
 	},
 	updateData() {
-		axios.get('http://127.0.0.1:5000/first')
+		axios.get('https://hidden-garden-54983.herokuapp.com/fields')
 		.then(res => {
 			console.log(res.data)
-			var resString = JSON.stringify(res.data)
-			this.$store.commit('updateData',resString)
+			console.log(res.data.email_id[0])
+			for (var i = 0; i<res.data.length; i++) {
+				console.log(res.data[i])
+			}
+			var firstString = JSON.stringify(res.data.first_name[0])
+			var lastString = JSON.stringify(res.data.last_name[0])
+			var emailString = JSON.stringify(res.data.email_id[0])
+			console.log(emailString)
+			var addressString = JSON.stringify(res.data.office_address[0])
+			var phoneString = JSON.stringify(res.data.phone[0])
+			var stateString = JSON.stringify(res.data.state[0])
+			var titleString = JSON.stringify(res.data.title[0])
+			this.$store.commit('updateFirst', firstString)
+			this.$store.commit('updateLast', lastString)
+			this.$store.commit('updateEmail', emailString)
+			this.$store.commit('updateAddress', addressString)
+			this.$store.commit('updatePhone', phoneString)
+			this.$store.commit('updateState', stateString)
+			this.$store.commit('updateTitle', titleString)
 		})
 	}
   }

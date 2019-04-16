@@ -1,7 +1,7 @@
 <template>
 	<div class="Page2">
 			<div class="Page2__header">
-				<h1>{{data.type}}</h1>
+				<!-- <h1>{{data}}</h1> -->
 			</div>
 			<v-data-table
 				:headers="headers"
@@ -9,11 +9,13 @@
 				class="elevation-1">
 				<template v-slot:items="props">
 					<!-- <td>{{ props.item.name }}</td> -->
-					<td>{{ props.item.type }}</td>
-					<td>{{ props.item.confidence }}</td>
-					<td>{{ props.item.end_pos }}</td>
-					<td>{{ props.item.start_pos }}</td>
-					<td>{{ props.item.text }}</td>
+					<td>{{ props.item.first }}</td>
+					<td>{{ props.item.last }}</td>
+					<td>{{ props.item.email }}</td>
+					<td>{{ props.item.address }}</td>
+					<td>{{ props.item.phone }}</td>
+					<td>{{ props.item.state }}</td>
+					<td>{{ props.item.title }}</td>
 				</template>
 			</v-data-table>
 			<div class="Page2__header">
@@ -31,25 +33,29 @@ export default {
 	data () {
       return {
         headers: [
-			{
-			text: 'Type',
-			align: 'left',
+			// {
+			// text: 'Type',
+			// align: 'left',
 			// sortable: false,
-			value: 'type'
-			},
-			{ text: 'Confidence', value: 'confidence' },
-			{ text: 'Start Position', value: 'start_pos' },
-			{ text: 'End Position', value: 'end_pos' },     
-			{ text: 'Text', value: 'text' }
-        //   { text: 'Type', value: 'type' }
+			// value: 'type'
+			// },
+			{ text: 'First Name', value: 'first' },
+			{ text: 'Last Name', value: 'last' },
+			{ text: 'Email', value: 'email' },     
+			{ text: 'Address', value: 'address' },
+			{ text: 'Phone', value: 'phone' },
+			{ text: 'State', value: 'state' },
+			{ text: 'Title', value: 'title' },
         ],
         fields: [
 			{
-				type: this.$store.state.data.type,
-				confidence: this.$store.state.confidence,
-				end_pos: this.$store.state.data.end_pos,
-				start_pos: this.$store.state.data.start_pos,
-				text: this.$store.state.data.text
+				first: this.$store.state.first,
+				last: this.$store.state.data.last,
+				email: this.$store.state.data.email,
+				address: this.$store.state.data.address,
+				phone: this.$store.state.data.phone,
+				state: this.$store.state.data.state,
+				title: this.$store.state.data.title
 			}
 		]
       }

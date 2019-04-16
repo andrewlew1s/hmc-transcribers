@@ -7,13 +7,34 @@ export const store = new Vuex.Store({
   namespaced: true,
   state: {
     data: [
-      {type: '', confidence: 0, start_pos: 0, end_pos: 0, text: 0}
+      {first: '', last: '', email: '', address: '', phone: 0, state: '', title: ''}
     ]
   },
 
   mutations: {
-    updateData(state, payload){  
-      state.data.type = payload
+    updateFirst(state, payload){  
+      state.data.first = payload
+    },
+    updateLast(state, payload){  
+      state.data.last = payload
+    },
+    updateEmail(state, payload){  
+      state.data.email = payload
+    },
+    updateLast(state, payload){  
+      state.data.last = payload
+    },
+    updateAddress(state, payload){  
+      state.data.address = payload
+    },
+    updatePhone(state, payload){  
+      state.data.phone = payload
+    },
+    updateState(state, payload){  
+      state.data.state = payload
+    },
+    updateTitle(state, payload){  
+      state.data.title = payload
     }
   }
 })
