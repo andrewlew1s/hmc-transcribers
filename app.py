@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource, reqparse
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import pyrebase
 import pytesseract
 import flair
@@ -12,7 +12,7 @@ import requests
 
 app = Flask(__name__)
 api = Api(app)
-CORS(app, resources={r"/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/transcribe": {"origins": "ec2-13-57-16-89.us-west-1.compute.amazonaws.com:8000"}})
 
 
 config = {
@@ -32,50 +32,26 @@ database = firebase.database()
 model = SequenceTagger.load_from_file("final-model.pt")
 
 def downloadImage():
-    
+
     # storage.child("cards/classexnew.jpg").download("downloaded.jpg")
-    imageURL = storage.child("cards/classexnew.jpg").get_url(None)
+    imageURL = storage.child("cards/000983.jpg").get_url(None)
     # image = urllib.request.urlretrieve(imageURL, '001.jpg')
-    
+
     # file = urllib.request.urlretrieve(imageURL, '001.jpg')
     img = Image.open(requests.get(imageURL, stream=True).raw)
     return img
 
-data = {
-  "email_id": [
-    "courtneymerkel1S5@augustana.edu", 
-    0.3716849386692047
-  ], 
-  "first_name": [
-    "Courtney", 
-    0.6033658981323242
-  ], 
-  "last_name": [
-    "Merkel", 
-    0.9978609681129456
-  ], 
-  "office_address": [
-    "460 N Green St.  Somonauk", 
-    0.7969755291938782
-  ], 
-  "phone": [
-    "706-0011", 
-    0.4106656014919281
-  ], 
-  "state": [
-    "IL", 
-    0.6271725296974182
-  ], 
-  "title": [
-    "60552     EDUCATION", 
-    0.5333120673894882
-  ]
-}
 
 # def push_data():
 #     if request.method == 'POST':
 
 # image = downloadImage()
+
+
+@app.route('/')
+def testing():
+    return 'It works!'
+
 
 # UI accesses to generated fields
 @app.route('/fields', methods=['POST','GET'])
@@ -99,17 +75,19 @@ def run_OCR(image):
     readable = True
     try:
         text = Sentence(text)
-    except:
+    except Exception as e:
+        print(e)
         readable = False
     return text, readable
 
 
 @app.route('/transcribe', methods=['POST', 'GET'])
+@cross_origin(supports_credentials=True)
 def run_model():
     if request.method == 'GET':
         # model = SequenceTagger.load_from_file('final-model.pt')#database.child("model/best-model.pt")
-        # image = downloadImage()
-        image = Image.open('000983.jpg')
+        image = downloadImage()
+        #image = Image.open('000983.jpg')
         scrape, readable = run_OCR(image)
         finish = {}
         if readable:
@@ -122,12 +100,12 @@ def run_model():
                     if dictionary['confidence'] > finish[dictionary['type']][1]:
                         finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]
                 else:
-                    finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]                                                                             
-            
+                    finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]
+
             return jsonify(finish)
         else:
             return jsonify('Unable to read!')
         # jsonify(scrape.to_tagged_string())
 
-if __name__=="__main__":
-    app.run(port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8000, debug=True)
