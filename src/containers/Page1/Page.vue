@@ -72,7 +72,7 @@ export default {
 		// console.log(downloadURL)
 	},
 	updateData() {
-		axios.get('ec2-13-57-233-26.us-west-1.compute.amazonaws.com:8000/transcribe')
+		axios.get('http://ec2-52-53-205-144.us-west-1.compute.amazonaws.com:8000/transcribe')
 		.then(res => {
 			console.log(res.data)
 			console.log(res.data.email_id[0])
