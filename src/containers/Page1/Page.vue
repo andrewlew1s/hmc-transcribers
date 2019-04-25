@@ -6,7 +6,7 @@
 				<div class="Page1__content__logo">
 					<img alt="Vue logo" src="../../assets/logo.png">
 				</div>
-				<div class="Page1__content__header">
+				<div id="Page1__content" class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
 				<input type="file" name='file' @change="onFileSelected">
@@ -72,7 +72,7 @@ export default {
 		// console.log(downloadURL)
 	},
 	updateData() {
-		axios.get('https://hidden-garden-54983.herokuapp.com/fields')
+		axios.get('ec2-13-57-233-26.us-west-1.compute.amazonaws.com:8000/transcribe')
 		.then(res => {
 			console.log(res.data)
 			console.log(res.data.email_id[0])
@@ -94,7 +94,7 @@ export default {
 			this.$store.commit('updatePhone', phoneString)
 			this.$store.commit('updateState', stateString)
 			this.$store.commit('updateTitle', titleString)
-		})
+		}).catch(error => console.log(error))
 	}
   }
 }
