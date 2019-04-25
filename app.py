@@ -12,7 +12,7 @@ import requests
 
 app = Flask(__name__)
 api = Api(app)
-cors = CORS(app, resources={r"/transcribe": {"origins": "ec2-13-57-16-89.us-west-1.compute.amazonaws.com:8000"}})
+#cors = CORS(app, resources={r"/transcribe": {"origins": "ec2-13-57-16-89.us-west-1.compute.amazonaws.com:8000"}})
 
 
 config = {
@@ -106,6 +106,13 @@ def run_model():
         else:
             return jsonify('Unable to read!')
         # jsonify(scrape.to_tagged_string())
+
+@app.after_request
+def add_headers(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    return response
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8000, debug=True)
