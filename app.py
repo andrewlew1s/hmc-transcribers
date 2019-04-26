@@ -34,7 +34,7 @@ model = SequenceTagger.load_from_file("final-model.pt")
 def downloadImage(imageName):
     
     # storage.child("cards/classexnew.jpg").download("downloaded.jpg")
-    imageURL = storage.child("cards/"+ imageName +".jpg").get_url(None)
+    imageURL = storage.child("cards/"+ imageName).get_url(None)
     # image = urllib.request.urlretrieve(imageURL, '001.jpg')
     
     # file = urllib.request.urlretrieve(imageURL, '001.jpg')
