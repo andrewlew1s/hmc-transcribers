@@ -26,7 +26,8 @@
 								<v-btn @click="updateData" flat color="black">Yes</v-btn>
 							</v-card-actions>
 						</v-card>
-						<v-btn @click="onUpload" to="/display">See results</v-btn>
+						<v-btn @click="onUpload">Upload</v-btn>
+						<v-btn to="/display">See results</v-btn>
 					</v-flex>
 				</v-layout>
 			</div>
@@ -80,8 +81,14 @@ export default {
 		// ).then(r => console.log(r.status))
 		// .catch(e => console.log(e))
 		// console.log(filename)
-			
-		axios.get('http://ec2-52-53-205-144.us-west-1.compute.amazonaws.com:8000/transcribe')
+		
+		var filename = this.selectedFile.name
+		axios.get('http://ec2-13-56-227-193.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		params: {
+			name: filename
+			}
+		}
+		)
 		.then(res => {
 			console.log(res.data)
 			console.log(res.data.email_id[0])
