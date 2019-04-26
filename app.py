@@ -90,7 +90,7 @@ def run_model():
         image = downloadImage(imageName)
         #image = Image.open('000983.jpg')
         scrape, readable = run_OCR(image)
-        finish = {}
+        finish = {scrape}
         if readable:
             model.predict(scrape)
             fields = []
@@ -106,7 +106,6 @@ def run_model():
             return jsonify(finish)
         else:
             return jsonify('Unable to read!')
-        # jsonify(scrape.to_tagged_string())
 
 
 
