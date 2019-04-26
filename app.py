@@ -106,7 +106,6 @@ def run_model():
             return jsonify(finish)
         else:
             return jsonify('Unable to read!')
-        # jsonify(scrape.to_tagged_string())
 
 
 
