@@ -21,9 +21,6 @@ export const store = new Vuex.Store({
     updateEmail(state, payload){  
       state.data.email = payload
     },
-    updateLast(state, payload){  
-      state.data.last = payload
-    },
     updateAddress(state, payload){  
       state.data.address = payload
     },

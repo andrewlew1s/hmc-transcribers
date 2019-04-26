@@ -83,12 +83,11 @@ export default {
 		// console.log(filename)
 		
 		var filename = this.selectedFile.name
-		axios.get('http://ec2-13-56-227-193.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		axios.get('http://ec2-54-153-104-3.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
 			name: filename
 			}
-		}
-		)
+		})
 		.then(res => {
 			console.log(res.data)
 			console.log(res.data.email_id[0])
