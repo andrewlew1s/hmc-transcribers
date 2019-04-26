@@ -31,16 +31,15 @@ database = firebase.database()
 # modelURL = storage.child("models/final-model.pt").get_url(None)
 model = SequenceTagger.load_from_file("final-model.pt")
 
-def downloadImage():
-
+def downloadImage(imageName):
+    
     # storage.child("cards/classexnew.jpg").download("downloaded.jpg")
-    imageURL = storage.child("cards/000983.jpg").get_url(None)
+    imageURL = storage.child("cards/"+ imageName).get_url(None)
     # image = urllib.request.urlretrieve(imageURL, '001.jpg')
-
+    
     # file = urllib.request.urlretrieve(imageURL, '001.jpg')
     img = Image.open(requests.get(imageURL, stream=True).raw)
     return img
-
 
 # def push_data():
 #     if request.method == 'POST':
@@ -80,13 +79,15 @@ def run_OCR(image):
         readable = False
     return text, readable
 
-
 @app.route('/transcribe', methods=['POST', 'GET'])
 @cross_origin(supports_credentials=True)
 def run_model():
+    args = request.args
+    imageName = args['name']
+
     if request.method == 'GET':
         # model = SequenceTagger.load_from_file('final-model.pt')#database.child("model/best-model.pt")
-        image = downloadImage()
+        image = downloadImage(imageName)
         #image = Image.open('000983.jpg')
         scrape, readable = run_OCR(image)
         finish = {}

@@ -72,7 +72,6 @@ export default {
 		// console.log(downloadURL)
 	},
 	updateData() {
-
 		// var filename = this.selectedFile.name
 
 		// axios.post('http://ec2-52-53-205-144.us-west-1.compute.amazonaws.com:8000/transcribe',
