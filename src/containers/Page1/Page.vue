@@ -94,14 +94,28 @@ export default {
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}
-			var firstString = JSON.stringify(res.data.first_name[0])
-			var lastString = JSON.stringify(res.data.last_name[0])
-			var emailString = JSON.stringify(res.data.email_id[0])
-			console.log(emailString)
-			var addressString = JSON.stringify(res.data.office_address[0])
-			var phoneString = JSON.stringify(res.data.phone[0])
-			var stateString = JSON.stringify(res.data.state[0])
-			var titleString = JSON.stringify(res.data.title[0])
+			if (res.data.first_name) {
+				var firstString = JSON.stringify(res.data.first_name[0])
+			}
+			if (res.data.last_name) {
+				var lastString = JSON.stringify(res.data.last_name[0])
+			}
+			if (res.data.email_id) {
+				var emailString = JSON.stringify(res.data.email_id[0])
+			}
+			console.log('this is the emailString:' + emailString)
+			if (res.data.office_address) {
+				var addressString = JSON.stringify(res.data.office_address[0])
+			}
+			if (res.data.phone) {
+				var phoneString = JSON.stringify(res.data.phone[0])
+			}
+			if (res.data.state) {
+				var stateString = JSON.stringify(res.data.state[0])
+			}
+			if (res.data.title) {
+				var titleString = JSON.stringify(res.data.title[0])
+			}
 			this.$store.commit('updateFirst', firstString)
 			this.$store.commit('updateLast', lastString)
 			this.$store.commit('updateEmail', emailString)
