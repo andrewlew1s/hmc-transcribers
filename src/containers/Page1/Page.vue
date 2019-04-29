@@ -10,6 +10,7 @@
 					<h1>Upload a business card</h1>
 				</div>
 				<input type="file" name='file' @change="onFileSelected">
+				<v-btn @click="onUpload">Upload</v-btn>
 			</v-container>
 				<div class="Page2__card">
 				<v-layout>
@@ -26,7 +27,6 @@
 								<v-btn @click="updateData" flat color="black">Yes</v-btn>
 							</v-card-actions>
 						</v-card>
-						<v-btn @click="onUpload">Upload</v-btn>
 						<v-btn to="/display">See results</v-btn>
 					</v-flex>
 				</v-layout>
