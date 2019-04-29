@@ -90,7 +90,7 @@ export default {
 		})
 		.then(res => {
 			console.log(res.data)
-			console.log(res.data.email_id[0])
+			// console.log(res.data.email_id[0])
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}

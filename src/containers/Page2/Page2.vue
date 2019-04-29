@@ -21,7 +21,7 @@
 			<div class="Page2__header">
 				<h2>Or try again with another card:</h2>
 			</div>
-			<Browse />
+			<v-btn to="/">Try again</v-btn>
 	</div>
 </template>
 
