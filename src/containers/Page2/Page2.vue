@@ -33,12 +33,6 @@ export default {
 	data () {
       return {
         headers: [
-			// {
-			// text: 'Type',
-			// align: 'left',
-			// sortable: false,
-			// value: 'type'
-			// },
 			{ text: 'First Name', value: 'first' },
 			{ text: 'Last Name', value: 'last' },
 			{ text: 'Email', value: 'email' },     
@@ -49,7 +43,7 @@ export default {
         ],
         fields: [
 			{
-				first: this.$store.state.first,
+				first: this.$store.state.data.first,
 				last: this.$store.state.data.last,
 				email: this.$store.state.data.email,
 				address: this.$store.state.data.address,

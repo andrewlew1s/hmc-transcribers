@@ -83,7 +83,7 @@ export default {
 		// console.log(filename)
 		
 		var filename = this.selectedFile.name
-		axios.get('http://ec2-54-153-104-3.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		axios.get('http://ec2-13-56-238-116.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
 			name: filename
 			}
@@ -96,33 +96,41 @@ export default {
 			}
 			if (res.data.first_name) {
 				var firstString = JSON.stringify(res.data.first_name[0])
+				this.$store.commit('updateFirst', firstString)
+				console.log('this is the first_name:' + firstString)
 			}
 			if (res.data.last_name) {
 				var lastString = JSON.stringify(res.data.last_name[0])
+				this.$store.commit('updateLast', lastString)
 			}
 			if (res.data.email_id) {
 				var emailString = JSON.stringify(res.data.email_id[0])
+				this.$store.commit('updateEmail', emailString)
 			}
 			console.log('this is the emailString:' + emailString)
 			if (res.data.office_address) {
 				var addressString = JSON.stringify(res.data.office_address[0])
+				this.$store.commit('updateAddress', addressString)
 			}
 			if (res.data.phone) {
 				var phoneString = JSON.stringify(res.data.phone[0])
+				this.$store.commit('updatePhone', phoneString)
 			}
 			if (res.data.state) {
 				var stateString = JSON.stringify(res.data.state[0])
+				this.$store.commit('updateState', stateString)
 			}
 			if (res.data.title) {
 				var titleString = JSON.stringify(res.data.title[0])
+				this.$store.commit('updateTitle', titleString)
 			}
-			this.$store.commit('updateFirst', firstString)
-			this.$store.commit('updateLast', lastString)
-			this.$store.commit('updateEmail', emailString)
-			this.$store.commit('updateAddress', addressString)
-			this.$store.commit('updatePhone', phoneString)
-			this.$store.commit('updateState', stateString)
-			this.$store.commit('updateTitle', titleString)
+			
+			
+			
+			
+			
+			
+			
 		}).catch(error => console.log(error))
 	}
   }
