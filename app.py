@@ -90,7 +90,7 @@ def run_model():
         image = downloadImage(imageName)
         #image = Image.open('000983.jpg')
         scrape, readable = run_OCR(image)
-        finish = {scrape}
+        finish = {}
         if readable:
             model.predict(scrape)
             fields = []
