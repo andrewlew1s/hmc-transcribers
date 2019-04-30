@@ -1,5 +1,10 @@
 # bizniz-cards
 
+## Welcome to our 121 Software Development project's github repo! 
+Follow the node guidelines below to get started...
+This was a group project with some mudders
+
+
 ## Project setup
 ```
 npm install
