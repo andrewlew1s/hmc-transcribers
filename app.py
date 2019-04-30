@@ -122,8 +122,8 @@ def check_input(sentence: Sentence):
             if word in token.text:
                 token.add_tag("ner","")
                 sentence[i+1].add_tag("ner","S-phone")
-                
-        # Look for signifiers that next word is a phone number
+
+        # Look for signifiers that next word is a fax number
         for word in fax_sigs:
             if word in token.text:
                 token.add_tag("ner","")
