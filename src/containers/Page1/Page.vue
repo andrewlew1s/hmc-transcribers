@@ -18,7 +18,7 @@
 						<v-card>
 							<v-img
 								height="200px"
-								v-bind:src="imageURL">
+								v-bind:src="this.imageURL">
 								<v-container fill-height fluid>
 								</v-container>
 							</v-img>
