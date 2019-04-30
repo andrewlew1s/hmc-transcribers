@@ -28,7 +28,7 @@ STORAGE = FIREBASE.storage()
 DATABASE = FIREBASE.database()
 
 #Load in Text Clasfication Model
-TEXT_MODEL = SequenceTagger.load_from_file("gurt-model.pt")
+TEXT_MODEL = SequenceTagger.load_from_file("best-model.pt")
 
 def download_image(image_name):
     '''
@@ -63,11 +63,11 @@ def run_ocr(image):
             text += char
     readable = True
     try:
-        text = Sentence(text)
+        sentence = Sentence(text)
     except Exception as ocr_error:
         print(ocr_error)
         readable = False
-    return text, readable
+    return sentence, readable
 
 @APP.route('/transcribe', methods=['POST', 'GET'])
 @cross_origin(supports_credentials=True)
@@ -87,8 +87,10 @@ def run_model():
         if readable:
             #text classification model alters sentance by adding prediction tags 
             TEXT_MODEL.predict(scrape)
+            check_input(scrape)
             fields = []
             for span in scrape.get_spans('ner'):
+                print(span)
                 fields.append(span.to_dict())
             #gets most confident prediction for each field
             for dictionary in fields:
@@ -101,6 +103,32 @@ def run_model():
         else:
             finish = 'Unable to read!'
             return jsonify(finish)
+
+
+def check_input(sentence: Sentence):
+    """
+    Checks for common problems with the OCR and ML model and aims to fix them
+    """
+    phone_sigs = ["cell","Cell","phone","Phone","Phone/fax"]
+    fax_sigs = ["Fax","fax"]
+
+    for i,token in enumerate(sentence):
+        # Double checking that email address is valid
+        if "email_id" in token.get_tag("ner").value and "@" not in token.text:
+                token.add_tag("ner","")
+
+        # Look for signifiers that next word is a phone number
+        for word in phone_sigs:
+            if word in token.text:
+                token.add_tag("ner","")
+                sentence[i+1].add_tag("ner","S-phone")
+        
+        for word in fax_sigs:
+            if word in token.text:
+                token.add_tag("ner","")
+                sentence[i+1].add_tag("ner","S-fax")
+    
+        
 
 
 if __name__ == "__main__":
