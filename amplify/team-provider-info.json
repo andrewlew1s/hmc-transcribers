@@ -1,0 +1,14 @@
+{
+    "hmcscribes": {
+        "awscloudformation": {
+            "AuthRoleName": "hmc-121-20190425202757-authRole",
+            "UnauthRoleArn": "arn:aws:iam::431160293612:role/hmc-121-20190425202757-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::431160293612:role/hmc-121-20190425202757-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "hmc-121-20190425202757-deployment",
+            "UnauthRoleName": "hmc-121-20190425202757-unauthRole",
+            "StackName": "hmc-121-20190425202757",
+            "StackId": "arn:aws:cloudformation:us-west-2:431160293612:stack/hmc-121-20190425202757/499ce450-67d3-11e9-b590-0ae9b2fbd030"
+        }
+    }
+}

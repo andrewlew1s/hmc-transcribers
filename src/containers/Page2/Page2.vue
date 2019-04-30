@@ -1,73 +1,70 @@
 <template>
 	<div class="Page2">
-		<div class="Page2__card">
-				<v-layout>
-					<v-flex xs12 sm6 offset-sm3>
-						<v-card>
-							<v-img
-								height="200px"
-								src="https://images.pexels.com/photos/326569/pexels-photo-326569.jpeg?cs=srgb&dl=adult-blank-business-326569.jpg&fm=jpg">
-								<v-container fill-height fluid>
-								</v-container>
-							</v-img>
-							<v-card-actions>
-								<v-btn flat color="black">Share</v-btn>
-								<v-btn flat color="black">Explore</v-btn>
-							</v-card-actions>
-						</v-card>
-					</v-flex>
-				</v-layout>
-			</div>
 			<div class="Page2__header">
-				<h1>This is where the output will be displayed!</h1>
+				<!-- <h1>{{data}}</h1> -->
 			</div>
 			<v-data-table
 				:headers="headers"
 				:items="fields"
 				class="elevation-1">
-				<template v-slot:no-data>
-					<v-alert :value="true" color="error" icon="warning">
-						Sorry, nothing to display here :(
-					</v-alert>
+				<template v-slot:items="props">
+					<!-- <td>{{ props.item.name }}</td> -->
+					<td>{{ props.item.first }}</td>
+					<td>{{ props.item.last }}</td>
+					<td>{{ props.item.email }}</td>
+					<td>{{ props.item.address }}</td>
+					<td>{{ props.item.phone }}</td>
+					<td>{{ props.item.state }}</td>
+					<td>{{ props.item.title }}</td>
 				</template>
 			</v-data-table>
 			<div class="Page2__header">
 				<h2>Or try again with another card:</h2>
 			</div>
-			<Browse />
+			<v-btn to="/">Try again</v-btn>
 	</div>
 </template>
 
 <script>
 import Browse from '../../components/Browse.vue'
-
+import { mapState } from 'vuex'
 
 export default {
 	data () {
       return {
         headers: [
-          {
-            text: 'Full Name',
-            align: 'left',
-            sortable: false,
-            value: 'name'
-          },
-          { text: 'Address', value: 'address' },
-          { text: 'Post Code', value: 'post-code' },
-          { text: 'Company', value: 'company' },
-          { text: 'Telephone Number', value: 'telephone-number' },
-          { text: 'Email', value: 'email' }
+			{ text: 'First Name', value: 'first' },
+			{ text: 'Last Name', value: 'last' },
+			{ text: 'Email', value: 'email' },     
+			{ text: 'Address', value: 'address' },
+			{ text: 'Phone', value: 'phone' },
+			{ text: 'State', value: 'state' },
+			{ text: 'Title', value: 'title' },
         ],
-        fields: []
+        fields: [
+			{
+				first: this.$store.state.data.first,
+				last: this.$store.state.data.last,
+				email: this.$store.state.data.email,
+				address: this.$store.state.data.address,
+				phone: this.$store.state.data.phone,
+				state: this.$store.state.data.state,
+				title: this.$store.state.data.title
+			}
+		]
       }
 		},
 	components: {
 		Browse
+	},
+
+	computed: {
+		...mapState([
+			'data'
+		])
 	}
 }
-
 </script>
-
 
 <style lang="scss">
 @import '../../settings';
