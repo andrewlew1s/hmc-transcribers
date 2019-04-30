@@ -12,13 +12,13 @@
 				<input type="file" name='file' @change="onFileSelected">
 				<v-btn @click="onUpload">Upload</v-btn>
 			</v-container>
-				<div class="Page2__card">
+			<div class="Page2__card">
 				<v-layout>
 					<v-flex xs12 sm6 offset-sm3>
 						<v-card>
 							<v-img
 								height="200px"
-								src="https://images.pexels.com/photos/326569/pexels-photo-326569.jpeg?cs=srgb&dl=adult-blank-business-326569.jpg&fm=jpg">
+								v-bind:src="imageURL">
 								<v-container fill-height fluid>
 								</v-container>
 							</v-img>
@@ -27,10 +27,10 @@
 								<v-btn @click="updateData" flat color="black">Yes</v-btn>
 							</v-card-actions>
 						</v-card>
-						<v-btn to="/display">See results</v-btn>
 					</v-flex>
 				</v-layout>
 			</div>
+			<v-btn to="/display">See results</v-btn>
 		</div>
 	</section>
 </template>
@@ -46,7 +46,7 @@ export default {
   data () {
 	return {
 		selectedFile: null,
-		imageUrl: '',
+		imageURL: '',
 	}
   },
   components: {
@@ -67,10 +67,21 @@ export default {
 		console.log(filename)
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
-		var uploadTask = storageRef.put(this.selectedFile)
+		storageRef.put(this.selectedFile)
+		storageRef.getDownloadURL().then((imageURL) => {
+			console.log(imageURL)
+  			this.imageURL = imageURL
+		})
+		// console.log(this.imageURL)
+		// this.imageUrl = url
+		// document.querySelector('Page2__card').src = url
+		// console.log(url)
+		// var stringURL = url.join("")
+		// console.log(stringURL)
+		// this.imageURL = stringURL
+		// this.imageUrl = stringURL
+		// this.$store.commit('updateURL', stringURL)
 		
-		// var downloadURL = uploadTask.snapshot.downloadURL
-		// console.log(downloadURL)
 	},
 	updateData() {
 		// var filename = this.selectedFile.name
@@ -123,14 +134,7 @@ export default {
 			if (res.data.title) {
 				var titleString = JSON.stringify(res.data.title[0])
 				this.$store.commit('updateTitle', titleString)
-			}
-			
-			
-			
-			
-			
-			
-			
+			}			
 		}).catch(error => console.log(error))
 	}
   }
