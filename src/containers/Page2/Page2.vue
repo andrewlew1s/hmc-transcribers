@@ -9,13 +9,13 @@
 				class="elevation-1">
 				<template v-slot:items="props">
 					<!-- <td>{{ props.item.name }}</td> -->
-					<td>{{ props.item.first }}</td>
-					<td>{{ props.item.last }}</td>
-					<td>{{ props.item.email }}</td>
-					<td>{{ props.item.address }}</td>
-					<td>{{ props.item.phone }}</td>
-					<td>{{ props.item.state }}</td>
-					<td>{{ props.item.title }}</td>
+					<td>{{ item.first }}</td>
+					<td>{{ item.last }}</td>
+					<td>{{ item.email }}</td>
+					<td>{{ item.address }}</td>
+					<td>{{ item.phone }}</td>
+					<td>{{ item.state }}</td>
+					<td>{{ item.title }}</td>
 				</template>
 			</v-data-table>
 			<div class="Page2__header">
