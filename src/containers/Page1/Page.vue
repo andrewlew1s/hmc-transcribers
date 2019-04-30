@@ -3,10 +3,10 @@
 		<landing-image class="Page1__image"/>
 		<div class="Page1__content">
 			<v-container>
-				<div class="Page1__content__logo">
+				<div id="Page1__content" class="Page1__content__logo">
 					<img alt="Vue logo" src="../../assets/logo.png">
 				</div>
-				<div id="Page1__content" class="Page1__content__header">
+				<div class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
 				<input type="file" name='file' @change="onFileSelected">
@@ -94,7 +94,7 @@ export default {
 		// console.log(filename)
 		
 		var filename = this.selectedFile.name
-		axios.get('http://ec2-13-56-238-116.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		axios.get('http://ec2-54-215-219-21.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
 			name: filename
 			}
@@ -161,12 +161,12 @@ export default {
 
 	&__content {
 		// padding: 1rem;
-		margin-top: 2rem;
+		// margin-top: 2rem;
 		position: relative;
 		z-index: 1;
 
 		&__logo {
-			padding: 6rem;
+			padding: 2rem;
 		}
 
 		&__header {
