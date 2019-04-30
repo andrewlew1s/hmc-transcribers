@@ -122,11 +122,16 @@ def check_input(sentence: Sentence):
             if word in token.text:
                 token.add_tag("ner","")
                 sentence[i+1].add_tag("ner","S-phone")
-        
+                
+        # Look for signifiers that next word is a phone number
         for word in fax_sigs:
             if word in token.text:
                 token.add_tag("ner","")
                 sentence[i+1].add_tag("ner","S-fax")
+        
+        # Check for 5-digit number (zipcode)
+        if len(token.text) == 5 and token.text.isdigits():
+            token.add_tag("ner","S-zipcode")
     
         
 
