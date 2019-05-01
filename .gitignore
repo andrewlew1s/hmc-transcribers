@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+*.pt
 
 # local env files
 .env.local
@@ -19,6 +20,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+*.code-workspace
 
 #amplify
 amplify/\#current-cloud-backend
