@@ -109,7 +109,8 @@ def check_input(sentence: Sentence):
     """
     Checks for common problems with the OCR and ML model and aims to fix them
     """
-    phone_sigs = ["cell","Cell","phone","Phone","Phone/fax"]
+
+    phone_sigs = ["cell","Cell","phone","Phone","Phone/fax","phone/fax","Phone/Fax"]
     fax_sigs = ["Fax","fax"]
 
     for i,token in enumerate(sentence):
