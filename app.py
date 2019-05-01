@@ -90,7 +90,6 @@ def run_model():
             check_input(scrape)
             fields = []
             for span in scrape.get_spans('ner'):
-                print(span)
                 fields.append(span.to_dict())
             #gets most confident prediction for each field
             for dictionary in fields:
@@ -132,8 +131,6 @@ def check_input(sentence: Sentence):
         # Check for 5-digit number (zipcode)
         if len(token.text) == 5 and token.text.isdigits():
             token.add_tag("ner","S-zipcode")
-    
-        
 
 
 if __name__ == "__main__":
