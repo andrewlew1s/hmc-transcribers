@@ -76,5 +76,4 @@ $footerPadding: 60px;
 	}
 
 }
-
 </style>
