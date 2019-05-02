@@ -57,6 +57,7 @@ def run_ocr(image):
     output_text = pytesseract.image_to_string(image, config=configs)
     text = ''
     for i, char in enumerate(output_text):
+        i = i   # Just here to get rid of warnings
         if char == '\n' or char == ',' or char == '|':
             text += ' '
         else:
