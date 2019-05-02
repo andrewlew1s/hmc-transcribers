@@ -15,6 +15,7 @@
 <style lang="scss">
 
 .LandingImage {
+	
 	width: 100%;
 	margin-top: 0.5rem;
 	height: 100vh;
@@ -47,8 +48,7 @@
 
 		&--alt {
 		color: blue;
-	}
-
+		}
 	}
 
 	&__readMore {

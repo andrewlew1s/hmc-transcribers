@@ -71,27 +71,9 @@ export default {
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
   			this.imageURL = imageURL
-		})
-		// console.log(this.imageURL)
-		// this.imageUrl = url
-		// document.querySelector('Page2__card').src = url
-		// console.log(url)
-		// var stringURL = url.join("")
-		// console.log(stringURL)
-		// this.imageURL = stringURL
-		// this.imageUrl = stringURL
-		// this.$store.commit('updateURL', stringURL)
-		
+		})	
 	},
 	updateData() {
-		// var filename = this.selectedFile.name
-
-		// axios.post('http://ec2-52-53-205-144.us-west-1.compute.amazonaws.com:8000/transcribe',
-		// "?name=" + filename,
-		// {headers:{"Content-Type": "text/plain"}}
-		// ).then(r => console.log(r.status))
-		// .catch(e => console.log(e))
-		// console.log(filename)
 		
 		var filename = this.selectedFile.name
 		axios.get('http://ec2-52-53-126-176.us-west-1.compute.amazonaws.com:8000/transcribe', {
@@ -101,7 +83,6 @@ export default {
 		})
 		.then(res => {
 			console.log(res.data)
-			// console.log(res.data.email_id[0])
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}
@@ -145,7 +126,6 @@ export default {
 
 .Page1 {
 	
-
 	&__image {
 		width: 100%;
 		height: calc(100vh - 5.5rem);
@@ -156,12 +136,9 @@ export default {
 		width: 80%;
 		margin: -4rem 10% 2rem 10%;
 		text-align: center;
-		// padding: 3rem;
 	}
 
 	&__content {
-		// padding: 1rem;
-		// margin-top: 2rem;
 		position: relative;
 		z-index: 1;
 
@@ -172,9 +149,7 @@ export default {
 		&__header {
 			margin-bottom: 2rem;
 		}
-
 	}
-
 }
 
 </style>
