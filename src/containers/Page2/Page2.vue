@@ -1,14 +1,12 @@
 <template>
 	<div class="Page2">
-			<div class="Page2__header">
-				<!-- <h1>{{data}}</h1> -->
-			</div>
+		<div class="Page2__results">
 			<v-data-table
 				:headers="headers"
 				:items="fields"
-				class="elevation-1">
+				class="elevation-1"
+				hide-actions>
 				<template v-slot:items="props">
-					<!-- <td>{{ props.item.name }}</td> -->
 					<td>{{ props.item.first }}</td>
 					<td>{{ props.item.last }}</td>
 					<td>{{ props.item.email }}</td>
@@ -18,12 +16,15 @@
 					<td>{{ props.item.title }}</td>
 				</template>
 			</v-data-table>
-			<v-btn @click="exportData">Export</v-btn>
-			<div class="Page2__header">
-				<h2>Or try again with another card:</h2>
-			</div>
+		</div>
+		<div class="Page2__header">
+			<h2>Try again, save or view your data</h2>
+		</div>
+		<div class="Page2__buttons">
+			<v-btn @click="exportData">Save</v-btn>
 			<v-btn to="/">Try again</v-btn>
-			<Store />
+			<Store />	
+		</div>		
 	</div>
 </template>
 
@@ -64,7 +65,6 @@ export default {
 			this.$store.commit('addData', this.fields)
 		}
 	},
-
 	computed: {
 		...mapState([
 			'data'
@@ -78,12 +78,20 @@ export default {
 
 .Page2 {
 
+	&__results {
+		padding: 1rem;
+	}
+
 	&__card {
 		padding: 1rem;
 	}
 	
-	&__header{
+	&__header {
 		padding: 2rem;
+	}
+
+	&__buttons {
+		padding: 1rem;
 	}
 }
 </style>

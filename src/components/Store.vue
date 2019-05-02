@@ -1,64 +1,56 @@
 <template>
-	<div class="Store">
-			<div class="Store__header">
-				<!-- <h1>{{data}}</h1> -->
-			</div>
-      <li v-for="item in this.$store.state.data" v-bind:key="item.first">
-        {{item}}
-      </li>
-	</div>
+  <v-layout row justify-center>
+    <v-btn
+      @click.stop="dialog = true"
+    >
+      Saved Data
+    </v-btn>
+
+    <v-dialog
+      v-model="dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">Saved data</v-card-title>
+
+        <v-card-text>
+          <ul id="example-1">
+            <li v-for="item in (this.$store.state.data).slice(1)" v-bind:key="item.first">
+              {{item}}
+            </li>
+          </ul>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog = false"
+          >
+            DOWNLOAD
+          </v-btn>
+
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog = false"
+          >
+            Quit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-layout>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
-export default {
-	data () {
+  export default {
+    data () {
       return {
-        headers: [
-			{ text: 'First Name', value: 'first' },
-			{ text: 'Last Name', value: 'last' },
-			{ text: 'Email', value: 'email' },     
-			{ text: 'Address', value: 'address' },
-			{ text: 'Phone', value: 'phone' },
-			{ text: 'State', value: 'state' },
-			{ text: 'Title', value: 'title' },
-        ],
-        fields: [
-			{
-				first: this.$store.state.data.first,
-				last: this.$store.state.data.last,
-				email: this.$store.state.data.email,
-				address: this.$store.state.data.address,
-				phone: this.$store.state.data.phone,
-				state: this.$store.state.data.state,
-				title: this.$store.state.data.title
-			}
-		]
+        dialog: false
       }
-		},
-	methods: {
-		
-	},
-
-	computed: {
-		...mapState([
-			'data'
-		])
-	}
-}
+    }
+  }
 </script>
-
-<style lang="scss">
-
-.Store {
-
-	&__card {
-		padding: 1rem;
-	}
-	
-	&__header{
-		padding: 2rem;
-	}
-}
-</style>
