@@ -18,27 +18,23 @@ class api_test(unittest.TestCase):
         typeof_pic = PIL.JpegImagePlugin.JpegImageFile
         self.assertIsInstance(return_val, typeof_pic)
 
-        # img_name = "../*"
-        # return_val = app.download_image(img_name)
-        # self.assertNotIsInstance(return_val, PIL.JpegImagePlugin.JpegImageFile)
-
     def test_run_ocr(self):
         """
         Test for run_ocr function
         """
-        self.assertTrue(True)
+        self.assertTrue(True)   # Placeholder
 
     def test_run_model(self):
         """
         Test for run_model function
         """
-        self.assertTrue(True)
+        self.assertTrue(True)   # Placeholder
 
     def test_check_input(self):
         """
         Test for check_input function
         """
-        self.assertTrue(True)
+        self.assertTrue(True)   # Placeholder
 
 if __name__ == '__main__':
     unittest.main()
