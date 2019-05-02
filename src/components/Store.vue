@@ -1,34 +1,15 @@
 <template>
-	<div class="Page2">
-			<div class="Page2__header">
+	<div class="Store">
+			<div class="Store__header">
 				<!-- <h1>{{data}}</h1> -->
 			</div>
-			<v-data-table
-				:headers="headers"
-				:items="fields"
-				class="elevation-1">
-				<template v-slot:items="props">
-					<!-- <td>{{ props.item.name }}</td> -->
-					<td>{{ props.item.first }}</td>
-					<td>{{ props.item.last }}</td>
-					<td>{{ props.item.email }}</td>
-					<td>{{ props.item.address }}</td>
-					<td>{{ props.item.phone }}</td>
-					<td>{{ props.item.state }}</td>
-					<td>{{ props.item.title }}</td>
-				</template>
-			</v-data-table>
-			<v-btn @click="exportData">Export</v-btn>
-			<div class="Page2__header">
-				<h2>Or try again with another card:</h2>
-			</div>
-			<v-btn to="/">Try again</v-btn>
-			<Store />
+      <li v-for="item in this.$store.state.data" v-bind:key="item.first">
+        {{item}}
+      </li>
 	</div>
 </template>
 
 <script>
-import Store from '../../components/Store.vue'
 import { mapState } from 'vuex'
 
 export default {
@@ -56,13 +37,8 @@ export default {
 		]
       }
 		},
-	components: {
-		Store
-	},
 	methods: {
-		exportData(){
-			this.$store.commit('addData', this.fields)
-		}
+		
 	},
 
 	computed: {
@@ -74,9 +50,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../settings';
 
-.Page2 {
+.Store {
 
 	&__card {
 		padding: 1rem;
