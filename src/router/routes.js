@@ -1,11 +1,11 @@
 import landingRoutes from '../containers/Page1';
 import page2Routes from '../containers/Page2';
-import page3Routes from '../containers/Page3';
+import aboutRoutes from '../containers/About';
 
 const routes = [
 	...landingRoutes,
 	...page2Routes,
-	...page3Routes,
+	...aboutRoutes,
 	{
 		path: '*',
 		redirect: '/'
