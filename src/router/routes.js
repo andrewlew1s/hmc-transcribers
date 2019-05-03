@@ -1,10 +1,10 @@
 import landingRoutes from '../containers/Page1';
-import page2Routes from '../containers/Page2';
+import displayRoutes from '../containers/Display';
 import aboutRoutes from '../containers/About';
 
 const routes = [
 	...landingRoutes,
-	...page2Routes,
+	...displayRoutes,
 	...aboutRoutes,
 	{
 		path: '*',
