@@ -111,17 +111,41 @@ export default {
 				var addressString = JSON.stringify(res.data.office_address[0])
 				this.$store.commit('updateAddress', addressString)
 			}
+			if (res.data.office_address2) {
+				var addressString2 = JSON.stringify(res.data.office_address2[0])
+				this.$store.commit('updateAddress2', addressString2)
+			}
 			if (res.data.phone) {
 				var phoneString = JSON.stringify(res.data.phone[0])
 				this.$store.commit('updatePhone', phoneString)
+			}
+			if (res.data.fax) {
+				var faxString = JSON.stringify(res.data.fax[0])
+				this.$store.commit('updateFax', faxString)
+			}
+			if (res.data.city) {
+				var cityString = JSON.stringify(res.data.city[0])
+				this.$store.commit('updateCity', cityString)
 			}
 			if (res.data.state) {
 				var stateString = JSON.stringify(res.data.state[0])
 				this.$store.commit('updateState', stateString)
 			}
+			if (res.data.zip) {
+				var zipString = JSON.stringify(res.data.zip[0])
+				this.$store.commit('updateZip', zipString)
+			}
+			if (res.data.country) {
+				var countryString = JSON.stringify(res.data.country[0])
+				this.$store.commit('updateCountry', countryString)
+			}
 			if (res.data.title) {
 				var titleString = JSON.stringify(res.data.title[0])
 				this.$store.commit('updateTitle', titleString)
+			}
+			if (res.data.company) {
+				var companyString = JSON.stringify(res.data.company[0])
+				this.$store.commit('updateCompany', companyString)
 			}			
 		}).catch(error => console.log(error))
 	}
