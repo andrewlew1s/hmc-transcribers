@@ -13,7 +13,7 @@ class api_unit_tests(unittest.TestCase):
         Test for download_the_image function
         """
         img_name = '000983.jpg'
-        return_val = app.download_the_image(img_name)
+        return_val, unused_image = app.download_the_image(img_name)
         typeof_pic = PIL.JpegImagePlugin.JpegImageFile
         self.assertIsInstance(return_val, typeof_pic)
 
@@ -21,8 +21,11 @@ class api_unit_tests(unittest.TestCase):
         """
         Test for run_ocr function
         """
-        #TODO
-        self.assertTrue(True)   # Placeholder
+        img_name = '000983.jpg'
+        return_image, unused_image = app.download_the_image(img_name)
+        text, readable, unused_text_boxes = app.run_ocr(return_image) 
+        self.assertTrue(readable)
+        self.assertTrue(text != '')
 
     def test_run_model(self):
         """
@@ -47,10 +50,16 @@ class api_unit_tests(unittest.TestCase):
         
     def test_image_seg(self):
         """
-        Test for <fill this in with function name> function
+        Test for image_seg function
         """
-        #TODO
-        self.assertTrue(True)   # Placeholder
+        img_name = '000983.jpg'
+        bad_image, test_image = app.download_the_image(img_name)
+        unused_text, readable, text_boxes = app.run_ocr(return_image) 
+        seg_predictions, predictability = image_seg(fastai_image, text_boxes)
+        
+        self.assertTrue(readable)
+        self.assertTrue(predictability)
+        self.assertTrue(seg_predictions != 'Unable to predict.')
 
     def test_jsonify(self):
         """
