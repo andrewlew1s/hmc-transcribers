@@ -161,7 +161,7 @@ def image_seg(fastai_image, text_boxes):
                 if best_confidnece < non_void[text][field]:
                     best_confidnece = non_void[text][field]
                     best_text = text
-            seg_predictions[field] = [best_text, best_confidnece]
+            seg_predictions[field.lower()] = [best_text, best_confidnece]
     except Exception as e:
         return 'Unable to predict!'
     return seg_predictions
