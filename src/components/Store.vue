@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     saveFile: function() {
-      console.log(this.$store.state.data)
       const data = JSON.stringify(this.$store.state.data)
       const blob = new Blob([data], {type: 'text/plain'})
       const e = document.createEvent('MouseEvents'),

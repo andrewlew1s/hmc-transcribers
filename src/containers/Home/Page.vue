@@ -2,8 +2,8 @@
 	<section class="Page1">
 		<landing-image class="Page1__image"/>
 		<div class="Page1__content">
-			<v-container > 				
-				<img id="Page1__content" src="../../assets/logo.png">				
+			<v-container >
+				<img id="Page1__content" src="../../assets/logo.png">
 				<div class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
@@ -62,7 +62,7 @@ export default {
     }
   },
   components: {
-	LandingImage   
+	LandingImage
   },
   methods: {
 
@@ -77,47 +77,38 @@ export default {
 
 	onFileSelected(event) {
 		this.selectedFile = event.target.files[0]
-		console.log(this.selectedFile)
-		const fileReader = new FileReader()
 	},
 	onUpload() {
 		this.visibility = 'visible'
-		console.log(this.visibility)
 		var filename = this.selectedFile.name
 		var storageRef = firebase.storage().ref('cards/' + filename)
-		console.log(storageRef)
 		storageRef.put(this.selectedFile)
 		this.sleep(2000)
 		storageRef.getDownloadURL().then((imageURL) => {
-			console.log(imageURL)
 			this.visibility = 'hidden'
-  			this.imageURL = imageURL
-		})
-		this.sleep(1000)
-		storageRef.getDownloadURL().then((imageURL) => {
-			console.log(imageURL)
 			this.imageURL = imageURL
-			this.visibility = 'hidden'	
-			return
 		})
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
-			console.log(imageURL)
 			this.imageURL = imageURL
 			this.visibility = 'hidden'
 			return
 		})
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
-			console.log(imageURL)
 			this.imageURL = imageURL
 			this.visibility = 'hidden'
-			console.log(this.visibility)
 			return
-		})				
+		})
+		this.sleep(1000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			this.imageURL = imageURL
+			this.visibility = 'hidden'
+			return
+		})
 	},
 	updateData() {
-		
+
 		var filename = this.selectedFile.name
 		axios.get('http://ec2-52-53-126-176.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
@@ -125,17 +116,13 @@ export default {
 			}
 		})
 		.then(res => {
-			console.log(res.data)
-			for (var i = 0; i<res.data.length; i++) {
-				console.log(res.data[i])
-			}
 			var stringRes = res.data.toString()
 			if (stringRes.indexOf("File name does not exist") > -1) {
 				try{
 					var errorOCR = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
 					alert(errorOCR)
 				}catch(throw_error){
-					console.log(throw_error)
+					return throw_error
 				}
 			}
 			if (stringRes.indexOf("Unable to read") > -1) {
@@ -143,7 +130,7 @@ export default {
 					var a = 'OCR ERROR. Sorry, we encountered an error reading text from your image. Please make sure the image is upright, clear and evenly lit.'
 					alert(a)
 				}catch(throw_error){
-					console.log(throw_error)
+					return throw_error
 				}
 			}
 			if (res.data.first_name) {
@@ -197,8 +184,8 @@ export default {
 			if (res.data.company) {
 				var companyString = JSON.stringify(res.data.company[0])
 				this.$store.commit('updateCompany', companyString)
-			}			
-		}).catch(error => console.log(error))
+			}
+		}).catch()
 	}
   }
 }
@@ -209,11 +196,11 @@ export default {
 .v-progress-circular {
 
     margin: 1rem;
-	// visibility: hidden;
+
 }
 
 .Page1 {
-	
+
 	&__image {
 		width: 100%;
 		height: calc(100vh - 3.5rem);
