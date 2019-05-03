@@ -17,16 +17,12 @@
 import AppHeader from './components/AppHeader';
 import AppFooter from './components/AppFooter';
 
-
-
 export default {
-
 
   name: 'app',
   components: {
     AppHeader,
     AppFooter
-    
   }
 }
 </script>
@@ -46,12 +42,12 @@ $shadowColour: $Shadow-Colour;
 $footerPadding: 60px;
 
 .App {
+
 	font-family: $fontFamily;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
 	
-
 	&__inner {
 		
 		width: 100%;
@@ -76,7 +72,5 @@ $footerPadding: 60px;
 	&__footer {
 		font-family: $fontFamily;
 	}
-
 }
-
 </style>
