@@ -55,14 +55,9 @@ export default {
 		this.selectedFile = event.target.files[0]
 		console.log(this.selectedFile)
 		const fileReader = new FileReader()
-		fileReader.addEventListener('load', () => {
-			this.imageUrl = fileReader.result
-			console.log(this.imageUrl)
-		})
 	},
 	onUpload() {
 		var filename = this.selectedFile.name
-		console.log(filename)
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
 		storageRef.put(this.selectedFile)
@@ -87,7 +82,6 @@ export default {
 			if (res.data.first_name) {
 				var firstString = JSON.stringify(res.data.first_name[0])
 				this.$store.commit('updateFirst', firstString)
-				console.log('this is the first_name:' + firstString)
 			}
 			if (res.data.last_name) {
 				var lastString = JSON.stringify(res.data.last_name[0])
@@ -97,7 +91,6 @@ export default {
 				var emailString = JSON.stringify(res.data.email_id[0])
 				this.$store.commit('updateEmail', emailString)
 			}
-			console.log('this is the emailString:' + emailString)
 			if (res.data.office_address) {
 				var addressString = JSON.stringify(res.data.office_address[0])
 				this.$store.commit('updateAddress', addressString)
