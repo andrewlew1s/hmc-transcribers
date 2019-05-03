@@ -27,8 +27,8 @@
 			<h2>Try again, save or view your data</h2>
 		</div>
 		<div class="Page2__buttons">
-			<v-btn @click="exportData">Save</v-btn>
 			<v-btn to="/">Try again</v-btn>
+			<v-btn @click="exportData">Save</v-btn>
 			<Store />	
 		</div>		
 	</div>

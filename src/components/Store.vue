@@ -3,7 +3,7 @@
     <v-btn
       @click.stop="dialog = true"
     >
-      Saved Data
+      View Data
     </v-btn>
 
     <v-dialog
