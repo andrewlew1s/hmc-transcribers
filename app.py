@@ -190,11 +190,16 @@ def check_input(sentence):
                         sentence[i + 1].add_tag('ner', 'S-phone')
 
             # Look for signifiers that next word is a fax number
+            is_phone = False
             for word in fax_sigs:
                 if word in token.text:
-                    token.add_tag('ner', '')
-                    if len(sentence[i + 1].text) > 9:
-                            sentence[i + 1].add_tag('ner', 'S-fax')
+                    for string in phone_sigs: 
+                        if string in token.text:
+                            is_phone = True
+                    if not is_phone:
+                        token.add_tag('ner', '')
+                        if len(sentence[i + 1].text) > 9:
+                                sentence[i + 1].add_tag('ner', 'S-fax')
             
         # Check for 5-digit number (zipcode)
         if len(token.text) == 5 and token.text.isdigit():

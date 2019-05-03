@@ -33,3 +33,5 @@ node_modules/
 aws-exports.js
 awsconfiguration.json
 src/assets/landingimage.png
+__pycache__/app.cpython-36.pyc
+export.pkl
