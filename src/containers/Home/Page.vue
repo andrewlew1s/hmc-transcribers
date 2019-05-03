@@ -95,7 +95,8 @@ export default {
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}
-			if (res.data.indexOf("File name does not exist") > -1) {
+			var stringRes = res.data.toString()
+			if (stringRes.indexOf("File name does not exist") > -1) {
 				try{
 					var a = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
 					alert(a)
@@ -103,7 +104,7 @@ export default {
 					console.log(throw_error)
 				}
 			}
-			if (res.data.indexOf("Unable to read") > -1) {
+			if (stringRes.indexOf("Unable to read") > -1) {
 				try{
 					var a = 'OCR ERROR. Sorry, we encountered an error reading text from your image. Please make sure the image is upright, clear and evenly lit.'
 					alert(a)
@@ -147,8 +148,8 @@ export default {
 				var stateString = JSON.stringify(res.data.state[0])
 				this.$store.commit('updateState', stateString)
 			}
-			if (res.data.zip) {
-				var zipString = JSON.stringify(res.data.zip[0])
+			if (res.data.zipcode) {
+				var zipString = JSON.stringify(res.data.zipcode[0])
 				this.$store.commit('updateZip', zipString)
 			}
 			if (res.data.country) {
