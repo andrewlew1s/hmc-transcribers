@@ -16,7 +16,7 @@
               
               <v-card-title primary-title>
                 <div>
-                  <h3 class="headline mb-2">Gert Cheedz</h3>
+                  <h3 class="headline mb-2">Garrett Cheadle</h3>
                   <div> {{ card_gert }} </div>
                 </div>
               </v-card-title>
@@ -88,7 +88,7 @@
 
             <v-card-title primary-title>
               <div>
-                <h3 class="headline mb-2">Lavon Bergo</h3>
+                <h3 class="headline mb-2">Lavon Burgo</h3>
                 <div> {{ card_lvn }} </div>
               </div>
             </v-card-title>
@@ -106,9 +106,9 @@
       return {
         card_gert: 'Garrett is a Junior at HMC majoring in CS / Math',
         card_ish: 'Isaiah is a Junior at HMC majoring in CS',
-        card_andrew: 'Andrew a Junior at CMC majoring in CS at HMC',
-        card_mike: 'Mike a Junior at HMC majoring in CS / Math',
-        card_lvn: 'Lavon a Junior at HMC majoring in CS'
+        card_andrew: 'Andrew is a Junior at CMC majoring in CS at HMC',
+        card_mike: 'Mike is a Junior at HMC majoring in CS / Math',
+        card_lvn: 'Lavon is a Junior at HMC majoring in CS'
       }
     }
   }

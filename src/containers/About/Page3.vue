@@ -6,18 +6,15 @@
 		<div class="About__team">
 			<team />
 		</div>
-		<!-- <fireworks/> -->
 	</div>
 </template>
 
 <script>
-import Fireworks from '../../components/Fireworks';
 import Team from '../../components/Team';
 
 
 export default {
 	components: {
-		Fireworks,
 		Team
 	}
 }
@@ -36,7 +33,7 @@ export default {
 	}
 
 	&__team {
-		
+
 	}
 }
 </style>
