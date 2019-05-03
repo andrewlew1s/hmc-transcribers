@@ -6,9 +6,7 @@ from flair.data import Sentence, Token
 
 class api_unit_tests(unittest.TestCase):
     """
-    I could totally be doing this wrong so let me know if this is not what we 
-    are supposed to be doing. I'm just trying to get a framework for unit 
-    testing set up here.
+    Unit tests for app.py
     """
 
     def test_download_the_image(self):
@@ -24,12 +22,56 @@ class api_unit_tests(unittest.TestCase):
         """
         Test for run_ocr function
         """
+        #TODO
         self.assertTrue(True)   # Placeholder
 
     def test_run_model(self):
         """
         Test for run_model function
         """
+        #TODO
+        self.assertTrue(True)   # Placeholder
+
+    def test_acc_camvid(self):
+        """
+        Test for <fill this in with function name> function
+        """
+        #TODO
+        self.assertTrue(True)   # Placeholder
+
+    def test_cross_origin(self):
+        """
+        Test for <fill this in with function name> function
+        """
+        #TODO
+        self.assertTrue(True)   # Placeholder
+        
+    def test_image_seg(self):
+        """
+        Test for <fill this in with function name> function
+        """
+        #TODO
+        self.assertTrue(True)   # Placeholder
+
+    def test_jsonify(self):
+        """
+        Test for <fill this in with function name> function
+        """
+        #TODO
+        self.assertTrue(True)   # Placeholder
+        
+    def test_quick_resize(self):
+        """
+        Test for <fill this in with function name> function
+        """
+        #TODO
+        self.assertTrue(True)   # Placeholder
+
+    def test_text_class(self):
+        """
+        Test for <fill this in with function name> function
+        """
+        #TODO
         self.assertTrue(True)   # Placeholder
 
     def test_check_input(self):
