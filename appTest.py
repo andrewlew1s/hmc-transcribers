@@ -61,17 +61,37 @@ class api_unit_tests(unittest.TestCase):
         
     def test_quick_resize(self):
         """
-        Test for <fill this in with function name> function
+        Test for quick_resize function
         """
         #TODO
-        self.assertTrue(True)   # Placeholder
+        #getting proper image and image type
+        #testing image that will not be resized
+        img_name = '000983.jpg'
+        bad_image, test_image = app.download_the_image(img_name)
+        height_test, width_test = test_image.size
+        return_imgae = app.quick_resize(test_image)
+        height_return, width_return = return_imgae.size
+        self.assertTrue([height_test, width_test] == [height_return, width_return])
+
+        #getting proper image and image type
+        #testing image that will be resized
+        img_name = '000001.jpg'
+        bad_image, test_image = app.download_the_image(img_name)
+        height_test, width_test = test_image.size
+        return_imgae = app.quick_resize(test_image)
+        height_return, width_return = return_imgae.size
+        self.assertFalse([height_test, width_test] == [height_return, width_return])
 
     def test_text_class(self):
         """
         Test for <fill this in with function name> function
         """
         #TODO
-        self.assertTrue(True)   # Placeholder
+        test_sentence = Sentence('Lavon Burgo 411 High Street, Randolph, MA 02368')
+        predictions = text_class(test_sentence, {})
+
+        self.assertTrue(finish[state] == 'MA')
+        self.assertTrue(finish[zipcode] == '02368')
 
     def test_check_input(self):
         """
