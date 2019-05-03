@@ -95,10 +95,10 @@ def run_ocr(image):
     readable = True
     text_boxes = pytesseract.image_to_data(image, output_type=Output.DICT, config=configs)
     try:
-        sentence = Sentence(text)
+        text = Sentence(text)
     except Exception as ocr_error:
         readable = False
-    return sentence, readable, text_boxes
+    return text, readable, text_boxes
 
 
 def quick_resize(fastai_image):
