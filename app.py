@@ -19,15 +19,17 @@ APP = Flask(__name__)
 API = Api(APP)
 CORS(APP)
 
+
 #Configuration information for Firebase connection
 CONFIG = {
-    "apiKey": "AIzaSyCrQrzpGmwxtICzplBfV4kFw02CYPYHxdc",
-    "authDomain": "hmc-transcribers.firebaseapp.com",
-    "databaseURL": "https://hmc-transcribers.firebaseio.com",
-    "projectId": "hmc-transcribers",
-    "storageBucket": "hmc-transcribers.appspot.com",
-    "messagingSenderId": "859954806298"
+    'apiKey': 'AIzaSyCrQrzpGmwxtICzplBfV4kFw02CYPYHxdc',
+    'authDomain': 'hmc-transcribers.firebaseapp.com',
+    'databaseURL': 'https://hmc-transcribers.firebaseio.com',
+    'projectId': 'hmc-transcribers',
+    'storageBucket': 'hmc-transcribers.appspot.com',
+    'messagingSenderId': '859954806298'
 }
+
 
 #Create References to Firebase Cloud Storage
 FIREBASE = pyrebase.initialize_app(CONFIG)
@@ -35,11 +37,7 @@ STORAGE = FIREBASE.storage()
 DATABASE = FIREBASE.database()
 
 
-#Explain this bullshit
-codes = np.loadtxt('codes.txt', dtype=str); codes
-name2id = {v:k for k,v in enumerate(codes)}
-void_code = name2id['Void']
-
+#Loads in codes.txt which maps an image segmentation pixel prediction to a field
 with open('codes.txt' ,'r') as rf:
     count = 0
     CODE_DICT = {}
@@ -47,6 +45,11 @@ with open('codes.txt' ,'r') as rf:
         CODE_DICT.update({count:row.replace('\n','')})
         count+=1
 
+#List of all fields which can be predicted
+ALL_FIELDS = [CODE_DICT[i] for i in CODE_DICT if CODE_DICT[i] != 'Void']
+
+#Metric used to calculate image segmentation accuracy during tests
+#Required to be defined in order for model to be loaded
 def acc_camvid(input, target):
     target = target.squeeze(1)
     mask = target != void_code
@@ -58,25 +61,26 @@ LEARN = load_learner(Path('./'))
 LEARN.data.single_ds.tfmargs['size'] = None
 
 #Load in Text Clasfication Model
-TEXT_MODEL = SequenceTagger.load_from_file("best-model.pt")
+TEXT_MODEL = SequenceTagger.load_from_file('best-model.pt')
+
 
 
 def download_image(image_name):
-    '''
+    """
     Returns image from firebase storage.
-    '''
-    image_url = STORAGE.child("cards/"+ image_name).get_url(None)
-    img = PIL.Image.open(requests.get(imageURL, stream=True).raw)
-    img_fastai = open_image(requests.get(imageURL, stream=True).raw)
+    """
+    image_url = STORAGE.child('cards/'+ image_name).get_url(None)
+    img = PIL.Image.open(requests.get(image_url, stream=True).raw)
+    img_fastai = open_image(requests.get(image_url, stream=True).raw)
     return img, img_fastai
 
 
 def run_ocr(image):
-    '''
+    """
     Runs OCR on given image and returns output with no
     newline, comma, or bar character. If OCR returns no
     output, then return that image is unreadable.
-    '''
+    """
     # Define config parameters
     configs = ('-l eng --oem 1 --psm 3')
     # Run tesseract OCR on image
@@ -98,9 +102,9 @@ def run_ocr(image):
 
 
 def quick_resize(fastai_image):
-    '''
+    """
     Quick resize of the fastai image type glitch that for some reason doesn't like odd dimensions.
-    '''
+    """
     height, width = fastai_image.size
     if height%2 != 0:
         fastai_image = fastai_image.crop((0,0, height-1, width))
@@ -111,6 +115,9 @@ def quick_resize(fastai_image):
 
 
 def image_seg(fastai_image, text_boxes):
+    """
+    Funtion to create predictions using the image segmentation model
+    """
     try:
         out = LEARN.predict(fastai_image)
         #This turns out into a list of list for easier transversal
@@ -129,19 +136,35 @@ def image_seg(fastai_image, text_boxes):
             width = box[3]
             height = box[4]
 
-            ratioList = [0 for i in CODE_DICT]
+            ratio_list = [0 for i in CODE_DICT]
             count = 0
             for x in range(left, left+width):
                 for y in range(top, top+height):
                   count += 1
                   index = learn_output[y][x]
-                  ratioList[index] += 1
+                  ratio_list[index] += 1
 
-            ratio_dict = {CODE_DICT[i]: float(ratioList[i])/float(count) for i in range(len(ratioList))}
+            ratio_dict = {CODE_DICT[i]: float(ratio_list[i])/float(count) for i in range(len(ratio_list))}
             predictions[text] = ratio_dict
+
+        non_void = {}
+        for text in predictions:
+          if predictions[text]['Void'] != 1.0:
+            del predictions[text]['Void']
+            non_void[text] = predictions[text]
+
+        seg_predictions = {CODE_DICT[i]:'' for i in CODE_DICT if CODE_DICT[i] != 'Void'}
+        for field in ALL_FIELDS:
+            best_confidnece = 0.0
+            best_text = ''
+            for text in non_void:
+                if best_confidnece < non_void[text][field]:
+                    best_confidnece = non_void[text][field]
+                    best_text = text
+            seg_predictions[field] = [best_text, best_confidnece]
     except Exception as e:
         return 'Unable to predict!'
-    return predictions
+    return seg_predictions
 
 
 def check_input(sentence: Sentence):
@@ -149,33 +172,35 @@ def check_input(sentence: Sentence):
     Checks for common problems with the OCR and ML model and aims to fix them
     """
 
-    phone_sigs = ["cell","Cell","phone","Phone","Phone/fax","phone/fax","Phone/Fax"]
-    fax_sigs = ["Fax","fax"]
+    phone_sigs = ['cell','Cell','phone','Phone','Phone/fax','phone/fax','Phone/Fax']
+    fax_sigs = ['Fax','fax']
 
     for i,token in enumerate(sentence):
         # Double checking that email address is valid
-        if "email_id" in token.get_tag("ner").value and "@" not in token.text:
-                token.add_tag("ner","")
+        if 'email_id' in token.get_tag('ner').value and '@' not in token.text:
+                token.add_tag('ner','')
 
         # Look for signifiers that next word is a phone number
         for word in phone_sigs:
             if word in token.text:
-                token.add_tag("ner","")
-                sentence[i+1].add_tag("ner","S-phone")
+                token.add_tag('ner','')
+                sentence[i+1].add_tag('ner','S-phone')
 
         # Look for signifiers that next word is a fax number
         for word in fax_sigs:
             if word in token.text:
-                token.add_tag("ner","")
-                sentence[i+1].add_tag("ner","S-fax")
+                token.add_tag('ner','')
+                sentence[i+1].add_tag('ner','S-fax')
 
         # Check for 5-digit number (zipcode)
-        if len(token.text) == 5 and token.text.isdigits():
-            token.add_tag("ner","S-zipcode")
-
+        if len(token.text) == 5 and token.text.isdigit():
+            token.add_tag('ner','S-zipcode')
 
 
 def text_class(scrape, finish):
+    """
+    Creates predictions using our text classification model
+    """
     #text classification model alters sentance by adding prediction tags
     TEXT_MODEL.predict(scrape)
     check_input(scrape)
@@ -192,22 +217,19 @@ def text_class(scrape, finish):
     return finish
 
 
-
-
-
 @APP.route('/transcribe', methods=['POST', 'GET'])
 @cross_origin(supports_credentials=True)
 def run_model():
-    '''
+    """
     Returns JSON of most-confident predictions made by text classification model.
     Gets image name argument from url api call.
-    '''
+    """
     #get image file name from url arguments
     args = request.args
     image_name = args['name']
 
     if request.method == 'GET':
-        image, fastai_image = downloadImage(image_name)
+        image, fastai_image = download_image(image_name)
         scrape, readable, text_boxes = run_ocr(image)
         finish = {}
         fastai_image = quick_resize(fastai_image)
@@ -215,6 +237,10 @@ def run_model():
         if readable:
             seg_predictions = image_seg(fastai_image, text_boxes)
             class_predictions = text_class(scrape, finish)
+
+            for field in seg_predictions:
+                if field not in class_predictions:
+                    class_predictions[field] = seg_predictions[field]
             return jsonify(class_predictions)
         else:
             finish = 'Unable to read!'
@@ -223,11 +249,11 @@ def run_model():
 
 @APP.route('/')
 def testing():
-    '''
+    """
     Home route for testing purposes.
-    '''
+    """
     return 'It works!'
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     APP.run(host='0.0.0.0', port=8000, debug=True)
