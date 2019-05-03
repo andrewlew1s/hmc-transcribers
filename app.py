@@ -66,7 +66,6 @@ LEARN.data.single_ds.tfmargs['size'] = None
 TEXT_MODEL = SequenceTagger.load_from_file('best-model.pt')
 
 
-
 def download_image(image_name):
     """
     Returns image from firebase storage.
@@ -132,7 +131,6 @@ def image_seg(fastai_image, text_boxes):
                                   text_boxes['top'][index], text_boxes['width'][index],
                                   text_boxes['height'][index]])
         predictions = {}
-
         for box in ocr_boxes:
             text = box[0]
             left = box[1]
@@ -265,7 +263,7 @@ def run_model():
                         class_predictions[field] = seg_predictions[field]
                 return jsonify(class_predictions)
             else:
-                finish = seg_predictions
+                finish = class_predictions
                 return jsonify(finish)
         else:
             finish = 'Unable to read.'
