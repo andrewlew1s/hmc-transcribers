@@ -2,7 +2,7 @@
 	<section class="LandingImage">
 		<v-container class="LandingImage__inner">
 
-			<h1 class="LandingImage__text">We are the BizNiz card transibers and we <span class="LandingImage__text--alt">transcribe business cards.</span></h1>
+			<h1 class="LandingImage__text">We are the BizNiz card transcribers and we <span class="LandingImage__text--alt">transcribe business cards.</span></h1>
 
 			<section v-scroll-to="'#Page1__content'" class="LandingImage__readMore">
 				<span>Discover <span class="LandingImage--altColour">More</span></span>
