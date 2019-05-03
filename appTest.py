@@ -33,7 +33,7 @@ class api_unit_tests(unittest.TestCase):
 
     def test_acc_camvid(self):
         """
-        Test for <fill this in with function name> function
+        Test for the acc_camvid function
         """
         #TODO
         self.assertTrue(True)   # Placeholder
@@ -63,11 +63,10 @@ class api_unit_tests(unittest.TestCase):
         """
         Test for quick_resize function
         """
-        #TODO
         #getting proper image and image type
         #testing image that will not be resized
         img_name = '000983.jpg'
-        bad_image, test_image = app.download_the_image(img_name)
+        unused_image, test_image = app.download_the_image(img_name)
         height_test, width_test = test_image.size
         return_imgae = app.quick_resize(test_image)
         height_return, width_return = return_imgae.size
@@ -76,7 +75,7 @@ class api_unit_tests(unittest.TestCase):
         #getting proper image and image type
         #testing image that will be resized
         img_name = '000001.jpg'
-        bad_image, test_image = app.download_the_image(img_name)
+        unused_image, test_image = app.download_the_image(img_name)
         height_test, width_test = test_image.size
         return_imgae = app.quick_resize(test_image)
         height_return, width_return = return_imgae.size
@@ -84,14 +83,13 @@ class api_unit_tests(unittest.TestCase):
 
     def test_text_class(self):
         """
-        Test for <fill this in with function name> function
+        Test for <text_class> function
         """
-        #TODO
         test_sentence = Sentence('Lavon Burgo 411 High Street, Randolph, MA 02368')
-        predictions = text_class(test_sentence, {})
+        predictions = app.text_class(test_sentence, {})
 
-        self.assertTrue(finish[state] == 'MA')
-        self.assertTrue(finish[zipcode] == '02368')
+        self.assertTrue(predictions['state'] == 'MA')
+        self.assertTrue(predictions['zipcode'] == '02368')
 
     def test_check_input(self):
         """
