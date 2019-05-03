@@ -14,11 +14,9 @@ import pyrebase
 from fastai import *
 from fastai.vision import *
 
-
 APP = Flask(__name__)
 API = Api(APP)
 CORS(APP)
-
 
 #Configuration information for Firebase connection
 CONFIG = {
@@ -29,7 +27,6 @@ CONFIG = {
     'storageBucket': 'hmc-transcribers.appspot.com',
     'messagingSenderId': '859954806298'
 }
-
 
 #Create References to Firebase Cloud Storage
 FIREBASE = pyrebase.initialize_app(CONFIG)
@@ -45,16 +42,6 @@ with open('codes.txt', 'r') as rf:
 
 #List of all fields which can be predicted
 ALL_FIELDS = [CODE_DICT[fieldy] for fieldy in CODE_DICT if CODE_DICT[fieldy] != 'Void']
-
-def acc_camvid(input, target):
-    """
-    Metric used to calculate image segmentation accuracy during tests
-    This is required to be defined in order for model to be loaded
-    """
-    target = target.squeeze(1)
-    mask = target != void_code
-    return (input.argmax(dim=1)[mask] == target[mask]).float().mean()
-
 
 #Load in Image Segmentation Model
 LEARN = load_learner(Path('./'))
@@ -75,6 +62,7 @@ def download_the_image(image_name):
         return img, img_fastai
     except Exception as download_error:
         return False, False
+
 
 def run_ocr(image):
     """
