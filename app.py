@@ -1,12 +1,19 @@
 import requests
-from PIL import Image
 from flask import Flask, jsonify, request
-from flask_restful import Api
+from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS, cross_origin
 from flair.models import SequenceTagger
 from flair.data import Sentence
 import pytesseract
 import pyrebase
+from pytesseract import Output
+import torch
+import PIL.Image
+import requests
+from fastai import *
+from fastai.vision import *
+import numpy as np
+
 
 APP = Flask(__name__)
 API = Api(APP)
@@ -27,23 +34,42 @@ FIREBASE = pyrebase.initialize_app(CONFIG)
 STORAGE = FIREBASE.storage()
 DATABASE = FIREBASE.database()
 
+
+#Explain this bullshit
+codes = np.loadtxt('codes.txt', dtype=str); codes
+name2id = {v:k for k,v in enumerate(codes)}
+void_code = name2id['Void']
+
+with open('codes.txt' ,'r') as rf:
+    count = 0
+    CODE_DICT = {}
+    for row in rf:
+        CODE_DICT.update({count:row.replace('\n','')})
+        count+=1
+
+def acc_camvid(input, target):
+    target = target.squeeze(1)
+    mask = target != void_code
+    return (input.argmax(dim=1)[mask]==target[mask]).float().mean()
+
+
+#Load in Image Segmentation Model
+LEARN = load_learner(Path('./'))
+LEARN.data.single_ds.tfmargs['size'] = None
+
 #Load in Text Clasfication Model
 TEXT_MODEL = SequenceTagger.load_from_file("best-model.pt")
+
 
 def download_image(image_name):
     '''
     Returns image from firebase storage.
     '''
     image_url = STORAGE.child("cards/"+ image_name).get_url(None)
-    img = Image.open(requests.get(image_url, stream=True).raw)
-    return img
+    img = PIL.Image.open(requests.get(image_url, stream=True).raw)
+    img_fastai = open_image(requests.get(image_url, stream=True).raw)
+    return img, img_fastai
 
-@APP.route('/')
-def testing():
-    '''
-    Home route for testing purposes.
-    '''
-    return 'It works!'
 
 def run_ocr(image):
     '''
@@ -62,46 +88,60 @@ def run_ocr(image):
         else:
             text += char
     readable = True
+    text_boxes = pytesseract.image_to_data(image, output_type=Output.DICT, config=configs)
     try:
         sentence = Sentence(text)
     except Exception as ocr_error:
         print(ocr_error)
         readable = False
-    return sentence, readable
+    return sentence, readable, text_boxes
 
-@APP.route('/transcribe', methods=['POST', 'GET'])
-@cross_origin(supports_credentials=True)
-def run_model():
-    '''
-    Returns JSON of most-confident predictions made by text classification model.
-    Gets image name argument from url api call.
-    '''
-    #get image file name from url arguments
-    args = request.args
-    image_name = args['name']
 
-    if request.method == 'GET':
-        image = download_image(image_name)
-        scrape, readable = run_ocr(image)
-        finish = {}
-        if readable:
-            #text classification model alters sentance by adding prediction tags 
-            TEXT_MODEL.predict(scrape)
-            check_input(scrape)
-            fields = []
-            for span in scrape.get_spans('ner'):
-                fields.append(span.to_dict())
-            #gets most confident prediction for each field
-            for dictionary in fields:
-                if dictionary['type'] in finish:
-                    if dictionary['confidence'] > finish[dictionary['type']][1]:
-                        finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]
-                else:
-                    finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]
-            return jsonify(finish)
-        else:
-            finish = 'Unable to read!'
-            return jsonify(finish)
+def quick_resize(fastai_image):
+    '''
+    Quick resize of the fastai image type glitch that for some reason doesn't like odd dimensions.
+    '''
+    height, width = fastai_image.size
+    if height%2 != 0:
+        fastai_image = fastai_image.crop((0,0, height-1, width))
+    height, width = fastai_image.size
+    if width%2 != 0:
+        fastai_image = fastai_image.crop((0,0, height, width-1))
+    return fastai_image
+
+
+def image_seg(fastai_image, text_boxes):
+    try:
+        out = LEARN.predict(fastai_image)
+        #This turns out into a list of list for easier transversal
+        learn_output = out[0].data[0].tolist()
+        OCR_boxes = []
+        for i in range(len(text_boxes['level'])):
+          if text_boxes['conf'][i] != '-1' and text_boxes['text'][i] != '':
+            OCR_boxes.append([text_boxes['text'][i], text_boxes['left'][i],
+            text_boxes['top'][i], text_boxes['width'][i], text_boxes['height'][i]])
+        predictions = {}
+
+        for box in OCR_boxes:
+            text = box[0]
+            left = box[1]
+            top = box[2]
+            width = box[3]
+            height = box[4]
+
+            ratio_list = [0 for i in CODE_DICT]
+            count = 0
+            for x in range(left, left+width):
+                for y in range(top, top+height):
+                  count += 1
+                  index = learn_output[y][x]
+                  ratio_list[index] += 1
+
+            ratio_dict = {CODE_DICT[i]: float(ratio_list[i])/float(count) for i in range(len(ratio_list))}
+            predictions[text] = ratio_dict
+    except Exception as e:
+        return 'Unable to predict!'
+    return predictions
 
 
 def check_input(sentence: Sentence):
@@ -128,10 +168,62 @@ def check_input(sentence: Sentence):
             if word in token.text:
                 token.add_tag("ner","")
                 sentence[i+1].add_tag("ner","S-fax")
-        
+
         # Check for 5-digit number (zipcode)
-        if len(token.text) == 5 and token.text.isdigits():
+        if len(token.text) == 5 and token.text.isdigit():
             token.add_tag("ner","S-zipcode")
+
+
+
+def text_class(scrape, finish):
+    #text classification model alters sentance by adding prediction tags
+    TEXT_MODEL.predict(scrape)
+    check_input(scrape)
+    fields = []
+    for span in scrape.get_spans('ner'):
+        fields.append(span.to_dict())
+    #gets most confident prediction for each field
+    for dictionary in fields:
+        if dictionary['type'] in finish:
+            if dictionary['confidence'] > finish[dictionary['type']][1]:
+                finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]
+        else:
+            finish[dictionary['type']] = [dictionary['text'], dictionary['confidence']]
+    return finish
+
+
+@APP.route('/transcribe', methods=['POST', 'GET'])
+@cross_origin(supports_credentials=True)
+def run_model():
+    '''
+    Returns JSON of most-confident predictions made by text classification model.
+    Gets image name argument from url api call.
+    '''
+    #get image file name from url arguments
+    args = request.args
+    image_name = args['name']
+
+    if request.method == 'GET':
+        image, fastai_image = download_image(image_name)
+        scrape, readable, text_boxes = run_ocr(image)
+        finish = {}
+        fastai_image = quick_resize(fastai_image)
+
+        if readable:
+            seg_predictions = image_seg(fastai_image, text_boxes)
+            class_predictions = text_class(scrape, finish)
+            return jsonify(class_predictions)
+        else:
+            finish = 'Unable to read!'
+            return jsonify(finish)
+
+
+@APP.route('/')
+def testing():
+    '''
+    Home route for testing purposes.
+    '''
+    return 'It works!'
 
 
 if __name__ == "__main__":
