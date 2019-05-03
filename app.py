@@ -66,8 +66,8 @@ def download_image(image_name):
     Returns image from firebase storage.
     '''
     image_url = STORAGE.child("cards/"+ image_name).get_url(None)
-    img = PIL.Image.open(requests.get(imageURL, stream=True).raw)
-    img_fastai = open_image(requests.get(imageURL, stream=True).raw)
+    img = PIL.Image.open(requests.get(image_url, stream=True).raw)
+    img_fastai = open_image(requests.get(image_url, stream=True).raw)
     return img, img_fastai
 
 
@@ -129,15 +129,15 @@ def image_seg(fastai_image, text_boxes):
             width = box[3]
             height = box[4]
 
-            ratioList = [0 for i in CODE_DICT]
+            ratio_list = [0 for i in CODE_DICT]
             count = 0
             for x in range(left, left+width):
                 for y in range(top, top+height):
                   count += 1
                   index = learn_output[y][x]
-                  ratioList[index] += 1
+                  ratio_list[index] += 1
 
-            ratio_dict = {CODE_DICT[i]: float(ratioList[i])/float(count) for i in range(len(ratioList))}
+            ratio_dict = {CODE_DICT[i]: float(ratio_list[i])/float(count) for i in range(len(ratio_list))}
             predictions[text] = ratio_dict
     except Exception as e:
         return 'Unable to predict!'
@@ -170,7 +170,7 @@ def check_input(sentence: Sentence):
                 sentence[i+1].add_tag("ner","S-fax")
 
         # Check for 5-digit number (zipcode)
-        if len(token.text) == 5 and token.text.isdigits():
+        if len(token.text) == 5 and token.text.isdigit():
             token.add_tag("ner","S-zipcode")
 
 
@@ -192,9 +192,6 @@ def text_class(scrape, finish):
     return finish
 
 
-
-
-
 @APP.route('/transcribe', methods=['POST', 'GET'])
 @cross_origin(supports_credentials=True)
 def run_model():
@@ -207,7 +204,7 @@ def run_model():
     image_name = args['name']
 
     if request.method == 'GET':
-        image, fastai_image = downloadImage(image_name)
+        image, fastai_image = download_image(image_name)
         scrape, readable, text_boxes = run_ocr(image)
         finish = {}
         fastai_image = quick_resize(fastai_image)
