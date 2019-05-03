@@ -87,6 +87,7 @@ def run_ocr(image):
     output_text = pytesseract.image_to_string(image, config=configs)
     text = ''
     for i, char in enumerate(output_text):
+        i = i   # Just here to get rid of warnings
         if char == '\n' or char == ',' or char == '|':
             text += ' '
         else:
@@ -171,30 +172,44 @@ def check_input(sentence: Sentence):
     """
     Checks for common problems with the OCR and ML model and aims to fix them
     """
-
     phone_sigs = ['cell','Cell','phone','Phone','Phone/fax','phone/fax','Phone/Fax']
-    fax_sigs = ['Fax','fax']
-
+    fax_sigs =  ['Fax','fax']
+    has_email = False
+    
     for i,token in enumerate(sentence):
         # Double checking that email address is valid
-        if 'email_id' in token.get_tag('ner').value and '@' not in token.text:
+        if 'email_id' in token.get_tag('ner').value:
+            # If no @ symbol, definitely not an email
+            if '@' not in token.text:
                 token.add_tag('ner','')
+            elif not has_email:
+                has_email = True
 
-        # Look for signifiers that next word is a phone number
-        for word in phone_sigs:
-            if word in token.text:
-                token.add_tag('ner','')
-                sentence[i+1].add_tag('ner','S-phone')
+        
+        # If no tagged email address, manually tag if conditions are met
+        if '@' in token.text and '.' in token.text:
+            # first character can't be @ symbol, is likely twitter handle
+            if token.text[0] != '@' and not has_email:
+                token.add_tag('ner','S-email_id',0.9)
 
-        # Look for signifiers that next word is a fax number
-        for word in fax_sigs:
-            if word in token.text:
-                token.add_tag('ner','')
-                sentence[i+1].add_tag('ner','S-fax')
+        if token != sentence[-1]:
+            # Look for signifiers that next word is a phone number
+            for word in phone_sigs:
+                if word in token.text:
+                    token.add_tag('ner','')
+                    if len(sentence[i+1].text) > 9:
+                        sentence[i+1].add_tag('ner','S-phone')
 
+            # Look for signifiers that next word is a fax number
+            for word in fax_sigs:
+                if word in token.text:
+                    token.add_tag('ner','')
+                    if len(sentence[i+1].text) > 9:
+                            sentence[i+1].add_tag('ner','S-fax')
+            
         # Check for 5-digit number (zipcode)
         if len(token.text) == 5 and token.text.isdigit():
-            token.add_tag('ner','S-zipcode')
+            token.add_tag('ner','S-zipcode',0.9)
 
 
 def text_class(scrape, finish):
