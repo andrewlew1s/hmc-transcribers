@@ -1,15 +1,14 @@
 <template>
-<div class="Menue">
+	<div class="Menue">
+		<b-link
+			class="Menue__link"
+			v-for="item in menuItems"
+			:key="item.path"
+			:to="item.path"
+			exact
+			v-text="item.name"/>
 
-	<b-link
-		class="Menue__link"
-		v-for="item in menuItems"
-		:key="item.path"
-		:to="item.path"
-		exact
-		v-text="item.name"/>
-
-</div>
+	</div>
 </template>
 
 <script>
@@ -24,7 +23,6 @@
 		set to `true`.
 
  */
-
 import routes from '../router/routes';
 
 export default {
@@ -53,9 +51,9 @@ export default {
 @import '../settings';
 
 .Menue{
-		text-align: center;
-		// border-top: 1px solid $Grey;
-		border-bottom: 1px solid $Grey;
+
+	text-align: center;
+	border-bottom: 1px solid $Grey;
 
 		&__link{
 			font-size: 20px;
@@ -82,6 +80,6 @@ export default {
 				top: 2px;
 			}
 		}
-
 	}
+	
 </style>

@@ -2,23 +2,21 @@
 	<section class="Page1">
 		<landing-image class="Page1__image"/>
 		<div class="Page1__content">
-			<v-container>
-				<div class="Page1__content__logo">
-					<img alt="Vue logo" src="../../assets/logo.png">
-				</div>
-				<div id="Page1__content" class="Page1__content__header">
+			<v-container > 				
+				<img id="Page1__content" src="../../assets/logo.png">				
+				<div class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
 				<input type="file" name='file' @change="onFileSelected">
 				<v-btn @click="onUpload">Upload</v-btn>
 			</v-container>
-				<div class="Page2__card">
+			<div class="Page2__card">
 				<v-layout>
 					<v-flex xs12 sm6 offset-sm3>
 						<v-card>
 							<v-img
 								height="200px"
-								src="https://images.pexels.com/photos/326569/pexels-photo-326569.jpeg?cs=srgb&dl=adult-blank-business-326569.jpg&fm=jpg">
+								v-bind:src="this.imageURL">
 								<v-container fill-height fluid>
 								</v-container>
 							</v-img>
@@ -27,10 +25,10 @@
 								<v-btn @click="updateData" flat color="black">Yes</v-btn>
 							</v-card-actions>
 						</v-card>
-						<v-btn to="/display">See results</v-btn>
 					</v-flex>
 				</v-layout>
 			</div>
+			<v-btn to="/display">See results</v-btn>
 		</div>
 	</section>
 </template>
@@ -46,58 +44,60 @@ export default {
   data () {
 	return {
 		selectedFile: null,
-		imageUrl: '',
+		imageURL: '',
 	}
   },
   components: {
 	LandingImage   
   },
   methods: {
+
+	sleep(milliseconds) {
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds){
+			break;
+			}
+		}
+	},
+
 	onFileSelected(event) {
 		this.selectedFile = event.target.files[0]
 		console.log(this.selectedFile)
 		const fileReader = new FileReader()
-		fileReader.addEventListener('load', () => {
-			this.imageUrl = fileReader.result
-			console.log(this.imageUrl)
-		})
 	},
 	onUpload() {
 		var filename = this.selectedFile.name
-		console.log(filename)
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
-		var uploadTask = storageRef.put(this.selectedFile)
-		
-		// var downloadURL = uploadTask.snapshot.downloadURL
-		// console.log(downloadURL)
+		storageRef.put(this.selectedFile)
+		this.sleep(2000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			console.log(imageURL)
+  			this.imageURL = imageURL
+		})
+		this.sleep(1000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			console.log(imageURL)
+  			this.imageURL = imageURL
+		})	
 	},
 	updateData() {
-		// var filename = this.selectedFile.name
-
-		// axios.post('http://ec2-52-53-205-144.us-west-1.compute.amazonaws.com:8000/transcribe',
-		// "?name=" + filename,
-		// {headers:{"Content-Type": "text/plain"}}
-		// ).then(r => console.log(r.status))
-		// .catch(e => console.log(e))
-		// console.log(filename)
 		
 		var filename = this.selectedFile.name
-		axios.get('http://ec2-13-56-238-116.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		axios.get('http://ec2-52-53-126-176.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
 			name: filename
 			}
 		})
 		.then(res => {
 			console.log(res.data)
-			// console.log(res.data.email_id[0])
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}
 			if (res.data.first_name) {
 				var firstString = JSON.stringify(res.data.first_name[0])
 				this.$store.commit('updateFirst', firstString)
-				console.log('this is the first_name:' + firstString)
 			}
 			if (res.data.last_name) {
 				var lastString = JSON.stringify(res.data.last_name[0])
@@ -107,7 +107,6 @@ export default {
 				var emailString = JSON.stringify(res.data.email_id[0])
 				this.$store.commit('updateEmail', emailString)
 			}
-			console.log('this is the emailString:' + emailString)
 			if (res.data.office_address) {
 				var addressString = JSON.stringify(res.data.office_address[0])
 				this.$store.commit('updateAddress', addressString)
@@ -123,14 +122,7 @@ export default {
 			if (res.data.title) {
 				var titleString = JSON.stringify(res.data.title[0])
 				this.$store.commit('updateTitle', titleString)
-			}
-			
-			
-			
-			
-			
-			
-			
+			}			
 		}).catch(error => console.log(error))
 	}
   }
@@ -141,10 +133,9 @@ export default {
 
 .Page1 {
 	
-
 	&__image {
 		width: 100%;
-		height: calc(100vh - 5.5rem);
+		height: calc(100vh - 3.5rem);
 		margin-bottom: 1rem;
 	}
 
@@ -152,25 +143,19 @@ export default {
 		width: 80%;
 		margin: -4rem 10% 2rem 10%;
 		text-align: center;
-		// padding: 3rem;
 	}
 
 	&__content {
-		// padding: 1rem;
-		margin-top: 2rem;
 		position: relative;
 		z-index: 1;
-
-		&__logo {
-			padding: 6rem;
-		}
+		padding: 1rem;
+		margin-top: 2rem;
 
 		&__header {
-			margin-bottom: 2rem;
+			margin-top: 2rem;
+			margin-bottom: 1rem;
 		}
-
 	}
-
 }
 
 </style>
