@@ -154,7 +154,7 @@ def image_seg(fastai_image, text_boxes):
             del predictions[text]['Void']
             non_void[text] = predictions[text]
 
-        seg_predictions = {CODE_DICT[i]:'' for i in CODE_DICT if CODE_DICT[i] != 'Void'}
+        seg_predictions = {CODE_DICT[i].lower():'' for i in CODE_DICT if CODE_DICT[i] != 'Void'}
         for field in ALL_FIELDS:
             best_confidnece = 0.0
             best_text = ''
@@ -162,7 +162,7 @@ def image_seg(fastai_image, text_boxes):
                 if best_confidnece < non_void[text][field]:
                     best_confidnece = non_void[text][field]
                     best_text = text
-            seg_predictions[field] = [best_text, best_confidnece]
+            seg_predictions[field.lower()] = [best_text, best_confidnece]
     except Exception as e:
         return 'Unable to predict!'
     return seg_predictions
