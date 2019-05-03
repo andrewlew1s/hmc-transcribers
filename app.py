@@ -153,7 +153,7 @@ def image_seg(fastai_image, text_boxes):
             del predictions[text]['Void']
             non_void[text] = predictions[text]
 
-        seg_predictions = {CODE_DICT[i]:'' for i in CODE_DICT if CODE_DICT[i] != 'Void'}
+        seg_predictions = {CODE_DICT[i].lower():'' for i in CODE_DICT if CODE_DICT[i] != 'Void'}
         for field in ALL_FIELDS:
             best_confidnece = 0.0
             best_text = ''
