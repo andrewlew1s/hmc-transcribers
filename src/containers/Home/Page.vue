@@ -110,7 +110,7 @@ export default {
 	updateData() {
 
 		var filename = this.selectedFile.name
-		axios.get('http://ec2-52-53-126-176.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		axios.get('http://ec2-54-183-194-82.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
 			name: filename
 			}
