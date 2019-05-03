@@ -34,8 +34,6 @@ CONFIG = {
 #Create References to Firebase Cloud Storage
 FIREBASE = pyrebase.initialize_app(CONFIG)
 STORAGE = FIREBASE.storage()
-DATABASE = FIREBASE.database()
-
 
 #Loads in codes.txt which maps an image segmentation pixel prediction to a field
 with open('codes.txt', 'r') as rf:
@@ -66,7 +64,7 @@ LEARN.data.single_ds.tfmargs['size'] = None
 TEXT_MODEL = SequenceTagger.load_from_file('best-model.pt')
 
 
-def download_image(image_name):
+def download_the_image(image_name):
     """
     Returns image from firebase storage.
     """
@@ -246,7 +244,7 @@ def run_model():
     image_name = args['name']
 
     if request.method == 'GET':
-        image, fastai_image = download_image(image_name)
+        image, fastai_image = download_the_image(image_name)
         if image is False:
             finish = 'File name does not exist.'
             return jsonify(finish)
