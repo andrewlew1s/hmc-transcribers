@@ -138,7 +138,7 @@ class api_unit_tests(unittest.TestCase):
         for i in range(10):
             num+=str(i)
             sentence = Sentence()
-            token = Token('12345')
+            token = Token(num)
             tag = 'S-zipcode'
             token.add_tag('ner', tag)
             app.check_input(sentence)
