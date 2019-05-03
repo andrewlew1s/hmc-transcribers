@@ -29,16 +29,14 @@ class api_unit_tests(unittest.TestCase):
 
     def test_run_model(self):
         """
-        Test for run_model function
+        Test for run_model function (Not testable w/out API call)
         """
-        #TODO
         self.assertTrue(True)   # Placeholder
 
     def test_acc_camvid(self):
         """
-        Test for the acc_camvid function
+        Test for the acc_camvid function (Not testable)
         """
-        #TODO
         self.assertTrue(True)   # Placeholder
 
     def test_cross_origin(self):
@@ -53,20 +51,16 @@ class api_unit_tests(unittest.TestCase):
         Test for image_seg function
         """
         img_name = '000983.jpg'
-        bad_image, test_image = app.download_the_image(img_name)
-        unused_text, readable, text_boxes = app.run_ocr(return_image) 
-        seg_predictions, predictability = image_seg(fastai_image, text_boxes)
-        
+        test_image, bad_image = app.download_the_image(img_name)
+        unused_text, readable, text_boxes = app.run_ocr(test_image)
+        seg_predictions, predictability = app.image_seg(test_image, text_boxes)
+        print(predictability)
+
+        self.assertIsNotNone(bad_image)
         self.assertTrue(readable)
         self.assertTrue(predictability)
         self.assertTrue(seg_predictions != 'Unable to predict.')
 
-    def test_jsonify(self):
-        """
-        Test for <fill this in with function name> function
-        """
-        #TODO
-        self.assertTrue(True)   # Placeholder
         
     def test_quick_resize(self):
         """
@@ -87,18 +81,19 @@ class api_unit_tests(unittest.TestCase):
         unused_image, test_image = app.download_the_image(img_name)
         height_test, width_test = test_image.size
         return_imgae = app.quick_resize(test_image)
-        height_return, width_return = return_imgae.size
+        height_return, width_return = test_image.size
         self.assertFalse([height_test, width_test] == [height_return, width_return])
 
     def test_text_class(self):
         """
-        Test for <text_class> function
+        Test for text_class function
         """
         test_sentence = Sentence('Lavon Burgo 411 High Street, Randolph, MA 02368')
         predictions = app.text_class(test_sentence, {})
+        print(predictions)
 
-        self.assertTrue(predictions['state'] == 'MA')
-        self.assertTrue(predictions['zipcode'] == '02368')
+        self.assertTrue(predictions['state'][0] == 'MA')
+        self.assertTrue(predictions['zipcode'][0] == '02368')
 
     def test_check_input(self):
         """
@@ -114,19 +109,19 @@ class api_unit_tests(unittest.TestCase):
         token.add_tag('ner', tag)
         sentence.add_token(token)
         app.check_input(sentence)
-        return_val = sentence[0].get_tag('ner')
+        return_val = sentence[0].get_tag('ner').value
         self.assertNotEqual(return_val,tag)
 
         token = Token('hello@world.com')
         sentence.add_token(token)
         app.check_input(sentence)
-        return_val = sentence[1].get_tag('ner')
+        return_val = sentence[1].get_tag('ner').value
         self.assertEqual(return_val,tag)
 
         token = Token('hello2@world.com')
         sentence.add_token(token)
         app.check_input(sentence)
-        return_val = sentence[2].get_tag('ner')
+        return_val = sentence[2].get_tag('ner').value
         self.assertNotEqual(return_val,tag)
 
         # Check for phone number
@@ -135,29 +130,29 @@ class api_unit_tests(unittest.TestCase):
             token = Token(sig)
             tag = 'S-phone'
             token.add_tag('ner', tag)
-            app.check_input(sentence)
-            return_val = sentence[0].get_tag('ner')
-            self.assertNotEqual(return_val,tag)
-
+            sentence.add_token(token)
             token = Token('123-456-7890')
+            sentence.add_token(token)
             app.check_input(sentence)
-            return_val = sentence[1].get_tag('ner')
+            return_val = sentence[0].get_tag('ner').value
+            self.assertNotEqual(return_val,tag)
+            return_val = sentence[1].get_tag('ner').value
             self.assertEqual(return_val,tag)
 
 
         # Check for fax number
         for sig in fax_sigs:
             sentence = Sentence()
-            token = Token('Fax')
+            token = Token(sig)
             tag = 'S-fax'
             token.add_tag('ner', tag)
-            app.check_input(sentence)
-            return_val = sentence[0].get_tag('ner')
-            self.assertNotEqual(return_val,tag)
-            
+            sentence.add_token(token)
             token = Token('123-456-7890')
+            sentence.add_token(token)
             app.check_input(sentence)
-            return_val = sentence[1].get_tag('ner')
+            return_val = sentence[0].get_tag('ner').value
+            self.assertNotEqual(return_val,tag)
+            return_val = sentence[1].get_tag('ner').value
             self.assertEqual(return_val,tag)
 
         # Check for zipcode
@@ -167,9 +162,9 @@ class api_unit_tests(unittest.TestCase):
             sentence = Sentence()
             token = Token(num)
             tag = 'S-zipcode'
-            token.add_tag('ner', tag)
+            sentence.add_token(token)
             app.check_input(sentence)
-            return_val = sentence[0].get_tag('ner')
+            return_val = sentence[0].get_tag('ner').value
             if len(num) == 5:
                 self.assertEqual(return_val,tag)
             else:

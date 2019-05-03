@@ -48,14 +48,14 @@ with open('codes.txt', 'r') as rf:
 #List of all fields which can be predicted
 ALL_FIELDS = [CODE_DICT[fieldy] for fieldy in CODE_DICT if CODE_DICT[fieldy] != 'Void']
 
-def acc_camvid(input, target):
-    """
-    Metric used to calculate image segmentation accuracy during tests
-    This is required to be defined in order for model to be loaded
-    """
-    target = target.squeeze(1)
-    mask = target != void_code
-    return (input.argmax(dim=1)[mask] == target[mask]).float().mean()
+# def acc_camvid(input, target):
+#     """
+#     Metric used to calculate image segmentation accuracy during tests
+#     This is required to be defined in order for model to be loaded
+#     """
+#     target = target.squeeze(1)
+#     mask = target != VOID_CODE
+#     return (input.argmax(dim=1)[mask] == target[mask]).float().mean()
 
 
 #Load in Image Segmentation Model
@@ -66,7 +66,7 @@ LEARN.data.single_ds.tfmargs['size'] = None
 TEXT_MODEL = SequenceTagger.load_from_file('best-model.pt')
 
 
-def download_image(image_name):
+def download_the_image(image_name):
     """
     Returns image from firebase storage.
     """
@@ -203,11 +203,16 @@ def check_input(sentence):
                         sentence[i + 1].add_tag('ner', 'S-phone')
 
             # Look for signifiers that next word is a fax number
+            is_phone = False
             for word in fax_sigs:
                 if word in token.text:
-                    token.add_tag('ner', '')
-                    if len(sentence[i + 1].text) > 9:
-                            sentence[i + 1].add_tag('ner', 'S-fax')
+                    for string in phone_sigs: 
+                        if string in token.text:
+                            is_phone = True
+                    if not is_phone:
+                        token.add_tag('ner', '')
+                        if len(sentence[i + 1].text) > 9:
+                                sentence[i + 1].add_tag('ner', 'S-fax')
             
         # Check for 5-digit number (zipcode)
         if len(token.text) == 5 and token.text.isdigit():
@@ -246,7 +251,7 @@ def run_model():
     image_name = args['name']
 
     if request.method == 'GET':
-        image, fastai_image = download_image(image_name)
+        image, fastai_image = download_the_image(image_name)
         if image is False:
             finish = 'File name does not exist.'
             return jsonify(finish)
