@@ -1,7 +1,7 @@
 # Bizniz
 
 ## Welcome to our 121 Software Development project's github repo! 
-Bizniz is a business card transcriber power by deep learning. Either explore the app at [Bizniz](http://hmc-121-transcribers-hmcscribes.s3-website-us-west-2.amazonaws.com/) or follow the following instructions to run the app on your own machine. 
+Bizniz is a business card transcriber powered by deep learning. Either explore the app at [Bizniz](http://hmc-121-transcribers-hmcscribes.s3-website-us-west-2.amazonaws.com/) or follow the following instructions to run the app on your own machine. 
 
 ## Launch the front-end
 ### Project setup
