@@ -23,9 +23,16 @@ pipenv shell python apiTest.py
 User testing's ultimate goal to ensure that the functionality of the entire webapp has not been distrupted by changes directly to the front-end or to the API. In its nature, this form of testing is not progamatic and less structured. At a minimum, a contributor should ensure that all pages, homepage, about, and results, render and then attempt to transcribe a valid business card, an image without text, and a non-image file and ensure that expected behavior occurs. This behavior is respectively, transcription results appear, a no text found error is returned, and invalid image type error is returned.
 
 ### 4. Testing Environment
-The API is deployed on an Amazon web services EC2 machine running Ubuntu 18.4 (Bionic Beaver). 
-Testing performed on Ubuntu 10 bioinc 18.4 amd64 someone look this up
+The API is deployed on an Amazon web services EC2 machine running Ubuntu 18.4 (Bionic Beaver) thus final testing prior to any merge with master ought to be tested in that environment to ensure compatability.
+
 ### 5. Testing Schedule
 For front-end commits:
+1. Build a local instance of the front end and perform user testing 
+2. If successful make pull request 
+3. Reviewer should pull that branch and run local instance of the app as well and perform user test. If both user test successful, accept pull request.
 
 For back-end commits:
+1. Run unit tests
+2. Run integration tests
+3. Build local instance of the front-end and perform a user test
+4. Make pull request
