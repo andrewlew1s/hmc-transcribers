@@ -39,6 +39,9 @@ export const store = new Vuex.Store({
     updateTitle(state, payload){
       state.data.title = ''  
       state.data.title = payload
+    },
+    addData(state, array){
+      state.data.push(array)
     }
   }
 })

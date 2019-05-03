@@ -1,15 +1,11 @@
 <template>
-<div class="Header">
-
-	<div class="App__inner Header__inner">
-
-		<menue
-			class="Header__menu"
-			:auto="true"/>
-
+	<div class="Header">
+		<div class="App__inner Header__inner">
+			<menue
+				class="Header__menu"
+				:auto="true"/>
+		</div>
 	</div>
-
-</div>
 </template>
 
 <script>
@@ -46,7 +42,5 @@ export default {
 	&__menu{
 		margin-top: $height/20
 	}
-
 }
-
 </style>
