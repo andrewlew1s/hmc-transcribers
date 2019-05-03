@@ -2,6 +2,7 @@ import unittest
 from app import *
 # import app
 import PIL
+from flair.data import Token
 
 class api_test(unittest.TestCase):
     """
@@ -9,6 +10,7 @@ class api_test(unittest.TestCase):
     are supposed to be doing. I'm just trying to get a framework for unit 
     testing set up here.
     """
+
     def test_download_image(self):
         """
         Test for download_image function
@@ -34,7 +36,19 @@ class api_test(unittest.TestCase):
         """
         Test for check_input function
         """
-        self.assertTrue(True)   # Placeholder
+        # Check for email address
+        sentence = Sentence()
+        token = Token("hello")
+        token.add_tag("ner", "email_id")
+        sentence.add_token(token)
+
+        # Check for phone number
+
+        # Check for fax number
+
+        # Check for zipcode
+
+        # self.assertTrue(True)   # Placeholder
 
 if __name__ == '__main__':
     unittest.main()
