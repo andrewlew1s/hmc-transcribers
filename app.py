@@ -126,6 +126,7 @@ def image_seg(fastai_image, text_boxes):
 
             ratio_list = [0 for i in CODE_DICT]
             count = 0
+
             for x_cord in range(left, left+width):
                 for y_cord in range(top, top+height):
                     count += 1
