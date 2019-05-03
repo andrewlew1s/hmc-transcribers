@@ -79,8 +79,21 @@ export default {
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
-  			this.imageURL = imageURL
-		})	
+			this.imageURL = imageURL	
+			return
+		})
+		this.sleep(1000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			console.log(imageURL)
+			this.imageURL = imageURL
+			return
+		})
+		this.sleep(1000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			console.log(imageURL)
+			this.imageURL = imageURL
+			return
+		})				
 	},
 	updateData() {
 		
@@ -98,8 +111,8 @@ export default {
 			var stringRes = res.data.toString()
 			if (stringRes.indexOf("File name does not exist") > -1) {
 				try{
-					var a = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
-					alert(a)
+					var errorOCR = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
+					alert(errorOCR)
 				}catch(throw_error){
 					console.log(throw_error)
 				}
