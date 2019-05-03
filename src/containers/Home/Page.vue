@@ -7,8 +7,16 @@
 				<div class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
-				<input type="file" name='file' @change="onFileSelected">
-				<v-btn @click="onUpload">Upload</v-btn>
+				<div id="v-progress-circular" class="Page1__content__progress">
+					<input type="file" name='file' @change="onFileSelected">
+					<v-btn @click="onUpload">Upload</v-btn>
+					<v-progress-circular
+					v-bind:style="{ visibility: computedVisibility }"
+					:width="3"
+					color="red"
+					indeterminate>
+					</v-progress-circular>
+				</div>
 			</v-container>
 			<div class="Page2__card">
 				<v-layout>
@@ -45,7 +53,13 @@ export default {
 	return {
 		selectedFile: null,
 		imageURL: '',
+		visibility: 'hidden'
 	}
+  },
+  computed: {
+    computedVisibility: function () {
+      return this.visibility;
+    }
   },
   components: {
 	LandingImage   
@@ -67,6 +81,8 @@ export default {
 		const fileReader = new FileReader()
 	},
 	onUpload() {
+		this.visibility = 'visible'
+		console.log(this.visibility)
 		var filename = this.selectedFile.name
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
@@ -74,24 +90,29 @@ export default {
 		this.sleep(2000)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
+			this.visibility = 'hidden'
   			this.imageURL = imageURL
 		})
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
-			this.imageURL = imageURL	
+			this.imageURL = imageURL
+			this.visibility = 'hidden'	
 			return
 		})
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
 			this.imageURL = imageURL
+			this.visibility = 'hidden'
 			return
 		})
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
 			this.imageURL = imageURL
+			this.visibility = 'hidden'
+			console.log(this.visibility)
 			return
 		})				
 	},
@@ -185,6 +206,12 @@ export default {
 
 <style lang="scss">
 
+.v-progress-circular {
+
+    margin: 1rem;
+	// visibility: hidden;
+}
+
 .Page1 {
 	
 	&__image {
@@ -201,13 +228,12 @@ export default {
 
 	&__content {
 		position: relative;
-		z-index: 1;
-		padding: 1rem;
-		margin-top: 2rem;
+		padding: 0.5rem;
+		margin-top: 2.5rem;
 
 		&__header {
 			margin-top: 2rem;
-			margin-bottom: 1rem;
+			margin-bottom: 0.5rem;
 		}
 	}
 }
