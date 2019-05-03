@@ -95,6 +95,22 @@ export default {
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}
+			if (res.data.includes("File name does not exist")) {
+				try{
+					var a = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
+					alert(a)
+				}catch(throw_error){
+					console.log(throw_error)
+				}
+			}
+			if (res.data.includes("Unable to read")) {
+				try{
+					var a = 'OCR ERROR. Sorry, we encountered an error reading text from your image. Please make sure the image is upright, clear and evenly lit.'
+					alert(a)
+				}catch(throw_error){
+					console.log(throw_error)
+				}
+			}
 			if (res.data.first_name) {
 				var firstString = JSON.stringify(res.data.first_name[0])
 				this.$store.commit('updateFirst', firstString)
