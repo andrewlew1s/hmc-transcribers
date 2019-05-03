@@ -1,8 +1,8 @@
 import unittest
-from app import *
-# import app
+# from app import *
+import app
 import PIL
-from flair.data import Token
+from flair.data import Sentence, Token
 
 class api_unit_tests(unittest.TestCase):
     """
@@ -16,7 +16,7 @@ class api_unit_tests(unittest.TestCase):
         Test for download_image function
         """
         img_name = '000983.jpg'
-        return_val = download_image(img_name)
+        return_val = app.download_image(img_name)
         typeof_pic = PIL.JpegImagePlugin.JpegImageFile
         self.assertIsInstance(return_val, typeof_pic)
 
@@ -39,8 +39,12 @@ class api_unit_tests(unittest.TestCase):
         # Check for email address
         sentence = Sentence()
         token = Token('hello')
-        token.add_tag('ner', 'email_id')
+        tag = 'email_id'
+        token.add_tag('ner', tag)
         sentence.add_token(token)
+        app.check_input(sentence)
+        return_val = sentence[0].get_tag('ner')
+        self.assertNotEqual(return_val,tag)
 
         # Check for phone number
 
