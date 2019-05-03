@@ -51,6 +51,16 @@ export default {
 	LandingImage   
   },
   methods: {
+
+	sleep(milliseconds) {
+		var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds){
+			break;
+			}
+		}
+	},
+
 	onFileSelected(event) {
 		this.selectedFile = event.target.files[0]
 		console.log(this.selectedFile)
@@ -61,6 +71,7 @@ export default {
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
 		storageRef.put(this.selectedFile)
+		this.sleep(4000)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
   			this.imageURL = imageURL
