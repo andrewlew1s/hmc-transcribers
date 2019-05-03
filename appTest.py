@@ -50,16 +50,16 @@ class api_unit_tests(unittest.TestCase):
         """
         Test for image_seg function
         """
-        img_name = '000983.jpg'
+        # This image fails to be predicted by the image seg model
+        img_name = '000004.jpg'
         test_image, bad_image = app.download_the_image(img_name)
         unused_text, readable, text_boxes = app.run_ocr(test_image)
         seg_predictions, predictability = app.image_seg(test_image, text_boxes)
-        print(predictability)
 
         self.assertIsNotNone(bad_image)
         self.assertTrue(readable)
-        self.assertTrue(predictability)
-        self.assertTrue(seg_predictions != 'Unable to predict.')
+        self.assertFalse(predictability)
+        self.assertEqual(seg_predictions, 'Unable to predict.')
 
         
     def test_quick_resize(self):
