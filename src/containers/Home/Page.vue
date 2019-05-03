@@ -95,7 +95,7 @@ export default {
 			for (var i = 0; i<res.data.length; i++) {
 				console.log(res.data[i])
 			}
-			if (res.data.includes("File name does not exist")) {
+			if (res.data.indexOf("File name does not exist") > -1) {
 				try{
 					var a = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
 					alert(a)
@@ -103,7 +103,7 @@ export default {
 					console.log(throw_error)
 				}
 			}
-			if (res.data.includes("Unable to read")) {
+			if (res.data.indexOf("Unable to read") > -1) {
 				try{
 					var a = 'OCR ERROR. Sorry, we encountered an error reading text from your image. Please make sure the image is upright, clear and evenly lit.'
 					alert(a)
