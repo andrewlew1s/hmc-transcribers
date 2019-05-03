@@ -1,4 +1,4 @@
-import landingRoutes from '../containers/Page1';
+import landingRoutes from '../containers/Home';
 import displayRoutes from '../containers/Display';
 import aboutRoutes from '../containers/About';
 
