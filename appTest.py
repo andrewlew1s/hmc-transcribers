@@ -1,5 +1,4 @@
 import unittest
-# from app import *
 import app
 import PIL
 from flair.data import Sentence, Token
@@ -89,6 +88,18 @@ class api_unit_tests(unittest.TestCase):
         sentence.add_token(token)
         app.check_input(sentence)
         return_val = sentence[0].get_tag('ner')
+        self.assertNotEqual(return_val,tag)
+
+        token = Token('hello@world.com')
+        sentence.add_token(token)
+        app.check_input(sentence)
+        return_val = sentence[1].get_tag('ner')
+        self.assertEqual(return_val,tag)
+
+        token = Token('hello2@world.com')
+        sentence.add_token(token)
+        app.check_input(sentence)
+        return_val = sentence[2].get_tag('ner')
         self.assertNotEqual(return_val,tag)
 
         # Check for phone number
