@@ -71,7 +71,7 @@ export default {
 		var storageRef = firebase.storage().ref('cards/' + filename)
 		console.log(storageRef)
 		storageRef.put(this.selectedFile)
-		this.sleep(4000)
+		this.sleep(4500)
 		storageRef.getDownloadURL().then((imageURL) => {
 			console.log(imageURL)
   			this.imageURL = imageURL
