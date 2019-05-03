@@ -14,11 +14,9 @@ import pyrebase
 from fastai import *
 from fastai.vision import *
 
-
 APP = Flask(__name__)
 API = Api(APP)
 CORS(APP)
-
 
 #Configuration information for Firebase connection
 CONFIG = {
@@ -30,12 +28,9 @@ CONFIG = {
     'messagingSenderId': '859954806298'
 }
 
-
 #Create References to Firebase Cloud Storage
 FIREBASE = pyrebase.initialize_app(CONFIG)
 STORAGE = FIREBASE.storage()
-DATABASE = FIREBASE.database()
-
 
 #Loads in codes.txt which maps an image segmentation pixel prediction to a field
 with open('codes.txt', 'r') as rf:
@@ -47,16 +42,6 @@ with open('codes.txt', 'r') as rf:
 
 #List of all fields which can be predicted
 ALL_FIELDS = [CODE_DICT[fieldy] for fieldy in CODE_DICT if CODE_DICT[fieldy] != 'Void']
-
-# def acc_camvid(input, target):
-#     """
-#     Metric used to calculate image segmentation accuracy during tests
-#     This is required to be defined in order for model to be loaded
-#     """
-#     target = target.squeeze(1)
-#     mask = target != VOID_CODE
-#     return (input.argmax(dim=1)[mask] == target[mask]).float().mean()
-
 
 #Load in Image Segmentation Model
 LEARN = load_learner(Path('./'))
@@ -78,6 +63,7 @@ def download_the_image(image_name):
     except Exception as download_error:
         return False, False
 
+
 def run_ocr(image):
     """
     Runs OCR on given image and returns output with no
@@ -97,10 +83,10 @@ def run_ocr(image):
     readable = True
     text_boxes = pytesseract.image_to_data(image, output_type=Output.DICT, config=configs)
     try:
-        sentence = Sentence(text)
+        text = Sentence(text)
     except Exception as ocr_error:
         readable = False
-    return sentence, readable, text_boxes
+    return text, readable, text_boxes
 
 
 def quick_resize(fastai_image):
@@ -140,6 +126,7 @@ def image_seg(fastai_image, text_boxes):
 
             ratio_list = [0 for i in CODE_DICT]
             count = 0
+
             for x_cord in range(left, left+width):
                 for y_cord in range(top, top+height):
                     count += 1

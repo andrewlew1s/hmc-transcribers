@@ -2,13 +2,21 @@
 	<section class="Page1">
 		<landing-image class="Page1__image"/>
 		<div class="Page1__content">
-			<v-container > 				
-				<img id="Page1__content" src="../../assets/logo.png">				
+			<v-container >
+				<img id="Page1__content" src="../../assets/logo.png">
 				<div class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
-				<input type="file" name='file' @change="onFileSelected">
-				<v-btn @click="onUpload">Upload</v-btn>
+				<div id="v-progress-circular" class="Page1__content__progress">
+					<input type="file" name='file' @change="onFileSelected">
+					<v-btn @click="onUpload">Upload</v-btn>
+					<v-progress-circular
+					v-bind:style="{ visibility: computedVisibility }"
+					:width="3"
+					color="red"
+					indeterminate>
+					</v-progress-circular>
+				</div>
 			</v-container>
 			<div class="Page2__card">
 				<v-layout>
@@ -45,10 +53,16 @@ export default {
 	return {
 		selectedFile: null,
 		imageURL: '',
+		visibility: 'hidden'
 	}
   },
+  computed: {
+    computedVisibility: function () {
+      return this.visibility;
+    }
+  },
   components: {
-	LandingImage   
+	LandingImage
   },
   methods: {
 
@@ -63,37 +77,61 @@ export default {
 
 	onFileSelected(event) {
 		this.selectedFile = event.target.files[0]
-		console.log(this.selectedFile)
-		const fileReader = new FileReader()
 	},
 	onUpload() {
+		this.visibility = 'visible'
 		var filename = this.selectedFile.name
 		var storageRef = firebase.storage().ref('cards/' + filename)
-		console.log(storageRef)
 		storageRef.put(this.selectedFile)
 		this.sleep(2000)
 		storageRef.getDownloadURL().then((imageURL) => {
-			console.log(imageURL)
-  			this.imageURL = imageURL
+			this.visibility = 'hidden'
+			this.imageURL = imageURL
 		})
 		this.sleep(1000)
 		storageRef.getDownloadURL().then((imageURL) => {
-			console.log(imageURL)
-  			this.imageURL = imageURL
-		})	
+			this.imageURL = imageURL
+			this.visibility = 'hidden'
+			return
+		})
+		this.sleep(1000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			this.imageURL = imageURL
+			this.visibility = 'hidden'
+			return
+		})
+		this.sleep(1000)
+		storageRef.getDownloadURL().then((imageURL) => {
+			this.imageURL = imageURL
+			this.visibility = 'hidden'
+			return
+		})
 	},
 	updateData() {
-		
+
 		var filename = this.selectedFile.name
-		axios.get('http://ec2-52-53-126-176.us-west-1.compute.amazonaws.com:8000/transcribe', {
+		axios.get('http://ec2-54-183-194-82.us-west-1.compute.amazonaws.com:8000/transcribe', {
 		params: {
 			name: filename
 			}
 		})
 		.then(res => {
-			console.log(res.data)
-			for (var i = 0; i<res.data.length; i++) {
-				console.log(res.data[i])
+			var stringRes = res.data.toString()
+			if (stringRes.indexOf("File name does not exist") > -1) {
+				try{
+					var errorOCR = 'FILE UPLOAD ERROR. Sorry, we encountered an error reaching your file. Please try again or with another image.'
+					alert(errorOCR)
+				}catch(throw_error){
+					return throw_error
+				}
+			}
+			if (stringRes.indexOf("Unable to read") > -1) {
+				try{
+					var a = 'OCR ERROR. Sorry, we encountered an error reading text from your image. Please make sure the image is upright, clear and evenly lit.'
+					alert(a)
+				}catch(throw_error){
+					return throw_error
+				}
 			}
 			if (res.data.first_name) {
 				var firstString = JSON.stringify(res.data.first_name[0])
@@ -131,8 +169,8 @@ export default {
 				var stateString = JSON.stringify(res.data.state[0])
 				this.$store.commit('updateState', stateString)
 			}
-			if (res.data.zip) {
-				var zipString = JSON.stringify(res.data.zip[0])
+			if (res.data.zipcode) {
+				var zipString = JSON.stringify(res.data.zipcode[0])
 				this.$store.commit('updateZip', zipString)
 			}
 			if (res.data.country) {
@@ -146,8 +184,8 @@ export default {
 			if (res.data.company) {
 				var companyString = JSON.stringify(res.data.company[0])
 				this.$store.commit('updateCompany', companyString)
-			}			
-		}).catch(error => console.log(error))
+			}
+		}).catch()
 	}
   }
 }
@@ -155,8 +193,14 @@ export default {
 
 <style lang="scss">
 
+.v-progress-circular {
+
+    margin: 1rem;
+
+}
+
 .Page1 {
-	
+
 	&__image {
 		width: 100%;
 		height: calc(100vh - 3.5rem);
@@ -171,13 +215,12 @@ export default {
 
 	&__content {
 		position: relative;
-		z-index: 1;
-		padding: 1rem;
-		margin-top: 2rem;
+		padding: 0.5rem;
+		margin-top: 2.5rem;
 
 		&__header {
 			margin-top: 2rem;
-			margin-bottom: 1rem;
+			margin-bottom: 0.5rem;
 		}
 	}
 }
