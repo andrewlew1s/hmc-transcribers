@@ -33,18 +33,6 @@ class api_unit_tests(unittest.TestCase):
         """
         self.assertTrue(True)   # Placeholder
 
-    def test_acc_camvid(self):
-        """
-        Test for the acc_camvid function (Not testable)
-        """
-        self.assertTrue(True)   # Placeholder
-
-    def test_cross_origin(self):
-        """
-        Test for <fill this in with function name> function
-        """
-        #TODO
-        self.assertTrue(True)   # Placeholder
         
     def test_image_seg(self):
         """
