@@ -6,7 +6,7 @@
 
 			<section v-scroll-to="'#Page1__content'" class="LandingImage__readMore">
 				<span>Discover <span class="LandingImage--altColour">More</span></span>
-				<v-icon v-text="'arrow_downwards'" color="highlight" large/>
+				<v-icon v-text="'arrow_downwards'" color="highlight" small/>
 			</section>
 		</v-container>
 	</section>
@@ -41,7 +41,7 @@
 		line-height: 4rem;
 		color: black;
 		font-weight: bold;
-		margin-top: 30vh;
+		margin-top: 25vh;
 
 		&--alt {
 		color: maroon;
