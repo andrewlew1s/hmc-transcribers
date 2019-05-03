@@ -27,7 +27,7 @@
 	justify-content: center;
 
 	&--altColour {
-		color: blue;
+		color: maroon;
 	}
 
 	&__inner {
@@ -37,17 +37,14 @@
 
 	&__text {
 		font-size: 3rem;
-		font-weight: normal;
 		letter-spacing: 0.1rem;
 		line-height: 4rem;
 		color: black;
-		font-size: 5rem;
-		line-height: 6rem;
 		font-weight: bold;
 		margin-top: 30vh;
 
 		&--alt {
-		color: blue;
+		color: maroon;
 		}
 	}
 

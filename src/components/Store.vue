@@ -11,7 +11,7 @@
       max-width="290"
     >
       <v-card>
-        <v-card-title class="headline">Saved data</v-card-title>
+        <v-card-title class="headline">Saved Data:</v-card-title>
 
         <v-card-text>
           <ul id="example-1">
@@ -25,7 +25,7 @@
           <v-spacer></v-spacer>
 
           <v-btn
-            color="green darken-1"
+            color="red darken-3"
             flat="flat"
             @click="saveFile"
           >
@@ -33,7 +33,7 @@
           </v-btn>
 
           <v-btn
-            color="green darken-1"
+            color="red darken-3"
             flat="flat"
             @click="dialog = false"
           >

@@ -2,10 +2,8 @@
 	<section class="Page1">
 		<landing-image class="Page1__image"/>
 		<div class="Page1__content">
-			<v-container>
-				<div id="Page1__content" class="Page1__content__logo">
-					<img alt="Vue logo" src="../../assets/logo.png">
-				</div>
+			<v-container > 				
+				<img id="Page1__content" src="../../assets/logo.png">				
 				<div class="Page1__content__header">
 					<h1>Upload a business card</h1>
 				</div>
@@ -128,7 +126,7 @@ export default {
 	
 	&__image {
 		width: 100%;
-		height: calc(100vh - 5.5rem);
+		height: calc(100vh - 3.5rem);
 		margin-bottom: 1rem;
 	}
 
@@ -141,13 +139,12 @@ export default {
 	&__content {
 		position: relative;
 		z-index: 1;
-
-		&__logo {
-			padding: 2rem;
-		}
+		padding: 1rem;
+		margin-top: 2rem;
 
 		&__header {
-			margin-bottom: 2rem;
+			margin-top: 2rem;
+			margin-bottom: 1rem;
 		}
 	}
 }
