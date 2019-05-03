@@ -1,18 +1,18 @@
+"""
+Controller API for HMC Business Card Transcribers
+"""
 import requests
+import PIL.Image
 from flask import Flask, jsonify, request
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api
 from flask_cors import CORS, cross_origin
 from flair.models import SequenceTagger
 from flair.data import Sentence
 import pytesseract
-import pyrebase
 from pytesseract import Output
-import torch
-import PIL.Image
-import requests
+import pyrebase
 from fastai import *
 from fastai.vision import *
-import numpy as np
 
 
 APP = Flask(__name__)
@@ -38,22 +38,24 @@ DATABASE = FIREBASE.database()
 
 
 #Loads in codes.txt which maps an image segmentation pixel prediction to a field
-with open('codes.txt' ,'r') as rf:
-    count = 0
+with open('codes.txt', 'r') as rf:
+    COUNT = 0
     CODE_DICT = {}
     for row in rf:
-        CODE_DICT.update({count:row.replace('\n','')})
-        count+=1
+        CODE_DICT.update({COUNT:row.replace('\n', '')})
+        COUNT += 1
 
 #List of all fields which can be predicted
-ALL_FIELDS = [CODE_DICT[i] for i in CODE_DICT if CODE_DICT[i] != 'Void']
+ALL_FIELDS = [CODE_DICT[fieldy] for fieldy in CODE_DICT if CODE_DICT[fieldy] != 'Void']
 
-#Metric used to calculate image segmentation accuracy during tests
-#Required to be defined in order for model to be loaded
 def acc_camvid(input, target):
+    """
+    Metric used to calculate image segmentation accuracy during tests
+    This is required to be defined in order for model to be loaded
+    """
     target = target.squeeze(1)
     mask = target != void_code
-    return (input.argmax(dim=1)[mask]==target[mask]).float().mean()
+    return (input.argmax(dim=1)[mask] == target[mask]).float().mean()
 
 
 #Load in Image Segmentation Model
@@ -69,11 +71,13 @@ def download_image(image_name):
     """
     Returns image from firebase storage.
     """
-    image_url = STORAGE.child('cards/'+ image_name).get_url(None)
-    img = PIL.Image.open(requests.get(image_url, stream=True).raw)
-    img_fastai = open_image(requests.get(image_url, stream=True).raw)
-    return img, img_fastai
-
+    try:
+        image_url = STORAGE.child('cards/'+ image_name).get_url(None)
+        img = PIL.Image.open(requests.get(image_url, stream=True).raw)
+        img_fastai = open_image(requests.get(image_url, stream=True).raw)
+        return img, img_fastai
+    except Exception as download_error:
+        return False, False
 
 def run_ocr(image):
     """
@@ -86,7 +90,7 @@ def run_ocr(image):
     # Run tesseract OCR on image
     output_text = pytesseract.image_to_string(image, config=configs)
     text = ''
-    for i, char in enumerate(output_text):
+    for j, char in enumerate(output_text):
         if char == '\n' or char == ',' or char == '|':
             text += ' '
         else:
@@ -96,7 +100,6 @@ def run_ocr(image):
     try:
         sentence = Sentence(text)
     except Exception as ocr_error:
-        print(ocr_error)
         readable = False
     return sentence, readable, text_boxes
 
@@ -107,10 +110,10 @@ def quick_resize(fastai_image):
     """
     height, width = fastai_image.size
     if height%2 != 0:
-        fastai_image = fastai_image.crop((0,0, height-1, width))
+        fastai_image = fastai_image.crop((0, 0, height - 1, width))
     height, width = fastai_image.size
     if width%2 != 0:
-        fastai_image = fastai_image.crop((0,0, height, width-1))
+        fastai_image = fastai_image.crop((0, 0, height, width - 1))
     return fastai_image
 
 
@@ -122,14 +125,15 @@ def image_seg(fastai_image, text_boxes):
         out = LEARN.predict(fastai_image)
         #This turns out into a list of list for easier transversal
         learn_output = out[0].data[0].tolist()
-        OCR_boxes = []
-        for i in range(len(text_boxes['level'])):
-          if text_boxes['conf'][i] != '-1' and text_boxes['text'][i] != '':
-            OCR_boxes.append([text_boxes['text'][i], text_boxes['left'][i],
-            text_boxes['top'][i], text_boxes['width'][i], text_boxes['height'][i]])
+        ocr_boxes = []
+        for index in range(len(text_boxes['level'])):
+            if text_boxes['conf'][index] != '-1' and text_boxes['text'][index] != '':
+                ocr_boxes.append([text_boxes['text'][index], text_boxes['left'][index],
+                                  text_boxes['top'][index], text_boxes['width'][index],
+                                  text_boxes['height'][index]])
         predictions = {}
 
-        for box in OCR_boxes:
+        for box in ocr_boxes:
             text = box[0]
             left = box[1]
             top = box[2]
@@ -138,22 +142,23 @@ def image_seg(fastai_image, text_boxes):
 
             ratio_list = [0 for i in CODE_DICT]
             count = 0
-            for x in range(left, left+width):
-                for y in range(top, top+height):
-                  count += 1
-                  index = learn_output[y][x]
-                  ratio_list[index] += 1
+            for x_cord in range(left, left+width):
+                for y_cord in range(top, top+height):
+                    count += 1
+                    index = learn_output[y_cord][x_cord]
+                    ratio_list[index] += 1
 
-            ratio_dict = {CODE_DICT[i]: float(ratio_list[i])/float(count) for i in range(len(ratio_list))}
+            ratio_dict = {CODE_DICT[i]: float(ratio_list[i])/float(count)
+                          for i in range(len(ratio_list))}
             predictions[text] = ratio_dict
 
         non_void = {}
         for text in predictions:
-          if predictions[text]['Void'] != 1.0:
-            del predictions[text]['Void']
-            non_void[text] = predictions[text]
+            if predictions[text]['Void'] != 1.0:
+                del predictions[text]['Void']
+                non_void[text] = predictions[text]
 
-        seg_predictions = {CODE_DICT[i].lower():'' for i in CODE_DICT if CODE_DICT[i] != 'Void'}
+        seg_predictions = {}
         for field in ALL_FIELDS:
             best_confidnece = 0.0
             best_text = ''
@@ -161,40 +166,41 @@ def image_seg(fastai_image, text_boxes):
                 if best_confidnece < non_void[text][field]:
                     best_confidnece = non_void[text][field]
                     best_text = text
-            seg_predictions[field.lower()] = [best_text, best_confidnece]
-    except Exception as e:
-        return 'Unable to predict!'
-    return seg_predictions
+            if best_text != '':
+                seg_predictions[field.lower()] = [best_text, best_confidnece]
+    except Exception as prediction_error:
+        return 'Unable to predict.', False
+    return seg_predictions, True
 
 
-def check_input(sentence: Sentence):
+def check_input(sentence):
     """
     Checks for common problems with the OCR and ML model and aims to fix them
     """
 
-    phone_sigs = ['cell','Cell','phone','Phone','Phone/fax','phone/fax','Phone/Fax']
-    fax_sigs = ['Fax','fax']
+    phone_sigs = ['cell', 'Cell', 'phone', 'Phone', 'Phone/fax', 'phone/fax', 'Phone/Fax']
+    fax_sigs = ['Fax', 'fax']
 
-    for i,token in enumerate(sentence):
+    for i, token in enumerate(sentence):
         # Double checking that email address is valid
         if 'email_id' in token.get_tag('ner').value and '@' not in token.text:
-                token.add_tag('ner','')
+            token.add_tag('ner', '')
 
         # Look for signifiers that next word is a phone number
         for word in phone_sigs:
             if word in token.text:
-                token.add_tag('ner','')
-                sentence[i+1].add_tag('ner','S-phone')
+                token.add_tag('ner', '')
+                sentence[i + 1].add_tag('ner', 'S-phone')
 
         # Look for signifiers that next word is a fax number
         for word in fax_sigs:
             if word in token.text:
-                token.add_tag('ner','')
-                sentence[i+1].add_tag('ner','S-fax')
+                token.add_tag('ner', '')
+                sentence[i + 1].add_tag('ner', 'S-fax')
 
         # Check for 5-digit number (zipcode)
         if len(token.text) == 5 and token.text.isdigit():
-            token.add_tag('ner','S-zipcode')
+            token.add_tag('ner', 'S-zipcode')
 
 
 def text_class(scrape, finish):
@@ -230,29 +236,27 @@ def run_model():
 
     if request.method == 'GET':
         image, fastai_image = download_image(image_name)
+        if image is False:
+            finish = 'File name does not exist.'
+            return jsonify(finish)
         scrape, readable, text_boxes = run_ocr(image)
         finish = {}
         fastai_image = quick_resize(fastai_image)
 
         if readable:
-            seg_predictions = image_seg(fastai_image, text_boxes)
+            seg_predictions, predictability = image_seg(fastai_image, text_boxes)
             class_predictions = text_class(scrape, finish)
-
-            for field in seg_predictions:
-                if field not in class_predictions:
-                    class_predictions[field] = seg_predictions[field]
-            return jsonify(class_predictions)
+            if predictability:
+                for field in seg_predictions:
+                    if field not in class_predictions:
+                        class_predictions[field] = seg_predictions[field]
+                return jsonify(class_predictions)
+            else:
+                finish = seg_predictions
+                return jsonify(finish)
         else:
-            finish = 'Unable to read!'
+            finish = 'Unable to read.'
             return jsonify(finish)
-
-
-@APP.route('/')
-def testing():
-    """
-    Home route for testing purposes.
-    """
-    return 'It works!'
 
 
 if __name__ == '__main__':
