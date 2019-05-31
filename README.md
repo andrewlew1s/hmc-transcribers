@@ -29,4 +29,4 @@ In the base directory of the repository simply run:
 gunicorn --bind 0.0.0.0:8000 wsgi
 ```
 
-Small caveat, due to Github restrictions on large files, neither of the models employed in our API are in the repository. Those files can be access at [Image Segmentation Model](https://drive.google.com/open?id=1-4Yttk9XY4W1O4Db9pojBt8xZkVIDE_j) and [Text classification model](https://drive.google.com/open?id=1-Ck33p3o9LZum5M6n6QhiUCjXi94_rmf).
+Small caveat, due to Github restrictions on large files, neither of the models employed in our API are in the repository. You may request access to those files at [Image Segmentation Model](https://drive.google.com/open?id=1-4Yttk9XY4W1O4Db9pojBt8xZkVIDE_j) and [Text classification model](https://drive.google.com/open?id=1-Ck33p3o9LZum5M6n6QhiUCjXi94_rmf).
